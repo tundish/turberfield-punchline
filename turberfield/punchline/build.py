@@ -21,12 +21,14 @@ import uuid
 
 from turberfield.dialogue.model import SceneScript
 from turberfield.dialogue.types import Persona
+from turberfield.utils.misc import gather_installed
 from turberfield.utils.misc import group_by_type
 
-import uncarved.lockdown
-from uncarved.lockdown.site import Site
-from uncarved.lockdown.theme import Theme
-from uncarved.lockdown.types import Eponymous
+import turberfield.punchline
+from turberfield.punchline.site import Site
+from turberfield.punchline.theme import Theme
+from turberfield.punchline.types import Eponymous
+
 
 def lifecycle(data: dict, defaults: Site.Lifecycle=None):
     defaults = defaults._asdict() if defaults else {}
@@ -102,7 +104,7 @@ def config_parser():
 
 def parser():
     rv = argparse.ArgumentParser()
-    with importlib.resources.path("uncarved.lockdown", "default.cfg") as default_config_path:
+    with importlib.resources.path("turberfield.punchline", "default.cfg") as default_config_path:
         rv.add_argument(
             "--config", action="append", type=pathlib.Path,
             default=[default_config_path],
@@ -135,9 +137,12 @@ def main(args):
             pages = [i._replace(path=output.resolve()) for i in filter_pages(find_pages(path))]
 
         # Discover themes
+        themes = dict(gather_installed("turberfield.interfaces.theme"))
+        logging.info(themes)
+
         # Select theme
-        theme_module = importlib.import_module("uncarved.lockdown.themes.carving.main")
-        theme = theme_module.theme(cfg)
+        theme_module = importlib.import_module("turberfield.punchline.themes.january")
+        theme = theme_module.January(cfg)
 
         feeds = defaultdict(set)
         with theme as writer:

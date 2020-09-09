@@ -25,8 +25,7 @@ import operator
 import string
 
 from turberfield.dialogue.model import Model
-
-from uncarved.lockdown.site import Site
+from turberfield.punchline.site import Site
 
 
 Lifecycle = namedtuple("Lifecycle", ["made_at", "view_at", "edit_at", "drop_at"])
