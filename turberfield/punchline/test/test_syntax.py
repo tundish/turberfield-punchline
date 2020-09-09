@@ -1,8 +1,8 @@
 import textwrap
 import unittest
 
-from uncarved.lockdown.build import build_pages
-from uncarved.lockdown.site import Site
+from turberfield.punchline.build import build_pages
+from turberfield.punchline.site import Site
 
 
 class SyntaxTests(unittest.TestCase):

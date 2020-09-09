@@ -2,9 +2,9 @@ import pathlib
 import textwrap
 import unittest
 
-from uncarved.lockdown.build import build_pages
-from uncarved.lockdown.site import Site
-from uncarved.lockdown.theme import Theme
+from turberfield.punchline.build import build_pages
+from turberfield.punchline.site import Site
+from turberfield.punchline.theme import Theme
 
 
 class ThemeTests(unittest.TestCase):
@@ -36,7 +36,7 @@ class ThemeTests(unittest.TestCase):
 
         More text.
 
-        .. fx:: uncarved.lockdown.media  audio/fly_away.mp3
+        .. fx:: turberfield.punchline.media  audio/fly_away.mp3
            :offset: 0
            :duration: 8000
            :loop: 12

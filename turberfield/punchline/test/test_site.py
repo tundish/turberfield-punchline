@@ -5,8 +5,8 @@ import datetime
 import textwrap
 import unittest
 
-from uncarved.lockdown.build import lifecycle
-from uncarved.lockdown.site import Site
+from turberfield.punchline.build import lifecycle
+from turberfield.punchline.site import Site
 
 
 FRAGMENT = """{
