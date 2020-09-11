@@ -1,14 +1,14 @@
 Punchline
 :::::::::
 
-What I worried about this year
-==============================
+What worried me recently
+========================
 
-There aren't enough jokes on the web. And there may never be. Never ever could ever be.
+There aren't enough jokes on the web. We need more satire. Urgently.
 
 There is indeed on the web a lot of poetry, but poetry web sites are not poetic places. Or even happy spaces.
 
-Oh, and the traditions of personal web sites, `web rings`_, and news feeds have fallen from common practice.
+And the traditions of personal web sites, `web rings`_, and `web feeds`_ are no longer common practice.
 
 What I did about it
 ===================
