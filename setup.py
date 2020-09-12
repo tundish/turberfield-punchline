@@ -62,7 +62,7 @@ setup(
             "punchline = turberfield.punchline.main:run",
         ],
         "turberfield.interfaces.theme": [
-            "january = turberfield.punchline.themes.jaunary.theme:January",
+            "january = turberfield.punchline.themes.january.theme:January",
         ],
     },
     zip_safe=False

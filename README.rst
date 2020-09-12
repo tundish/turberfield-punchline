@@ -117,11 +117,8 @@ If you want to see this example working on your PC, follow the steps for install
 Concepts
 ========
 
-RestructuredText
-----------------
-
-Tags and feeds
---------------
+Punchline dialogue is written in reStructuredText_ and incorporates the extensions from the 
+`Turberfield dialogue library`_.
 
 Releasing content
 -----------------
@@ -142,8 +139,31 @@ drop_at:
     Specifies when you want the entry to be withdrawn, eg: ``:drop_at: 2020-09-30``
 
 
+Tags
+----
+
+You can use metadata to tag dialogue with whatever keywords you wish. You can add as many tags as you like
+to the metadata, eg::
+
+    :tag:   Python
+    :tag:   Linux
+
+Feeds
+-----
+
+You can create multiple feeds for your site by adding ``:feed:`` attributes to the metadata.
+Eg::
+
+    :feed: if
+    :feed: coding
+
+Any dialogue without such attributes will appear in the *all* feed.
+
 Config file
 -----------
+
+The specifics of your published site (its URL for example) are controlled by a configuration file. You can
+specify the file by using the ``--config`` option to the punchline tool (see below).
 
 Punchline comes with a default configuration file which looks like this::
 
@@ -157,9 +177,20 @@ Punchline comes with a default configuration file which looks like this::
 
 This is the bare minimum you need to configure a feed for *all* category tags.
 
+Copy this file and create a section for each feed category you want to publish.
+
+You should edit the ``site_url`` variable in the ``[DEFAULT]`` section to the URL of your live web site.
 
 Themes
 ------
+
+Punchline has a theme plug-in system which permits complete customisation of the rendered site, including if
+necessary the JSON feed output.
+
+The interface is still in development, and is not documented at this time.
+
+In the meantime, for rebranding and layout changes, please edit the local copy of *bfost.css* after your site
+is rendered in the default theme.
 
 Installation
 ============
@@ -193,7 +224,13 @@ Linux and Mac users will need to adjust the execution path where necessary.
 
     ~/py3.8-blog/Scripts/python -m http.server -d turberfield/punchline/examples/output/
 
+#. Read the options available when running ``punchline``::
+
+    ~/py3-blog/Scripts/punchline.exe --help
+
 .. _JSON Feed: https://jsonfeed.org/version/1.1
 .. _web rings: https://www.mic.com/p/how-geocities-webrings-made-the-90s-internet-a-cozier-place-19638198
 .. _web feeds: https://en.wikipedia.org/wiki/Web_feed
 .. _Git Bash: https://gitforwindows.org/
+.. _reStructuredText: https://docutils.sourceforge.io/rst.html
+.. _Turberfield dialogue library: https://turberfield-dialogue.readthedocs.io/en/latest/
