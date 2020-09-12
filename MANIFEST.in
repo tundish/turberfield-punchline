@@ -1,0 +1,9 @@
+include LICENSE
+recursive-include . *.cfg
+recursive-include . *.css
+recursive-include . *.hex
+recursive-include . *.mp3
+recursive-include . *.rst
+recursive-include . *.otf
+recursive-include . *.woff
+recursive-include . *.woff2
