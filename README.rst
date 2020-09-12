@@ -164,6 +164,13 @@ Themes
 Installation
 ============
 
+These instructions assume:
+
+    * a Python 3.8+ installation
+    * a Windows terminal (`Git Bash`_ is recommended)
+
+Linux and Mac users will need to adjust the execution path where necessary.
+
 #. First make a virtual environment::
 
     python -m venv ~/py3-blog
@@ -172,13 +179,15 @@ Installation
 
     ~/py3-blog/Scripts/pip install -U pip, wheel
 
+#. Download the `repository as a zip file <https://github.com/tundish/turberfield-punchline/archive/master.zip>`_
+
 #. Install punchline::
 
     ~/py3-blog/Scripts/pip install turberfield-punchline-master.zip
 
 #. Build a blog from the example dialogue::
 
-    ~/py3-blog/Scripts/python -m turberfield.punchline.main turberfield/punchline/examples/
+    ~/py3-blog/Scripts/punchline.exe turberfield/punchline/examples/
 
 #. Launch a local web server to view the site (`http://localhost:8000`)::
 
@@ -187,3 +196,4 @@ Installation
 .. _JSON Feed: https://jsonfeed.org/version/1.1
 .. _web rings: https://www.mic.com/p/how-geocities-webrings-made-the-90s-internet-a-cozier-place-19638198
 .. _web feeds: https://en.wikipedia.org/wiki/Web_feed
+.. _Git Bash: https://gitforwindows.org/
