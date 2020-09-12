@@ -10,7 +10,7 @@ There aren't enough jokes on the web. We need more satire. Urgently.
 
 There is indeed on the web a lot of poetry, but poetry web sites are not poetic places. Or even happy spaces.
 
-And the traditions of personal web sites, `web rings`_, and `web feeds`_ are no longer common practice.
+Also the traditions of personal web sites, `web rings`_, and `web feeds`_ are no longer common practice.
 And I felt sad about that.
 
 What I did about it
@@ -181,6 +181,10 @@ Installation
 #. Build a blog from the example dialogue::
 
     ~/py3-blog/Scripts/python -m turberfield.punchline.main turberfield/punchline/examples/
+
+#. Launch a local web server to view the site (`http://localhost:8000`)::
+
+    ~/py3.8-blog/Scripts/python -m http.server -d turberfield/punchline/examples/output/
 
 .. _JSON Feed: https://jsonfeed.org/version/1.1
 .. _web rings: https://www.mic.com/p/how-geocities-webrings-made-the-90s-internet-a-cozier-place-19638198
