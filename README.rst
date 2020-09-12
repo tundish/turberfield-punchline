@@ -30,19 +30,51 @@ User Guide
 Example
 =======
 
-If you want to check this example works on your PC, follow the steps for installation_ first.
+If you want to see this example working on your PC, follow the steps for installation_ first.
 
 Concepts
 ========
 
-Metadata
---------
+RestructuredText
+~~~~~~~~~~~~~~~~
+
+Tags and feeds
+--------------
 
 Releasing content
 -----------------
 
+You can use metadata to control when pages are published. Four fields are available for that.
+All are optional. All accept a date or timestamp string:
+
+made_at:
+    Captures the time you created the entry, eg: ``:made_at: 2020-08-29 14:16``
+
+edit_at:
+    Captures the time you last changed the entry, eg: ``:edit_at: 2020-08-29 10:03:22``
+
+view_at:
+    Specifies when you first want the entry to be seen, eg: ``:view_at: 2020-09-01``
+
+drop_at:
+    Specifies when you want the entry to be withdrawn, eg: ``:drop_at: 2020-09-30``
+
+
 Config file
 -----------
+
+Punchline comes with a default configuration file which looks like this::
+
+    [DEFAULT]
+    site_url = /
+    feed_title = Site Feed
+    feed_name = all
+    feed_url = ${site_url}feeds/${feed_name}.json
+
+    [all]
+
+This is the bare minimum you need to configure a feed for *all* category tags.
+
 
 Themes
 ------
