@@ -4,9 +4,9 @@ Punchline
 What worried me recently
 ++++++++++++++++++++++++
 
-There aren't enough jokes on the web. We need more satire. Urgently.
+There aren't enough jokes on the web. I'd like to see more satire. Urgently.
 
-There is indeed on the web a lot of poetry, but poetry web sites are not poetic places. Or even happy spaces.
+There is indeed, on the web a lot of poetry. But poetry web sites are not poetic places. Or even happy spaces.
 
 Also the traditions of personal web sites, `web rings`_, and `web feeds`_ are no longer common practice.
 And I felt sad about that.
@@ -179,7 +179,8 @@ This is the bare minimum you need to configure a feed for *all* category tags.
 
 Copy this file and create a section for each feed category you want to publish.
 
-You should edit the ``site_url`` variable in the ``[DEFAULT]`` section to the URL of your live web site.
+You should edit the ``site_url`` variable in the ``[DEFAULT]`` section.
+Change it to the URL of your live web site.
 
 Themes
 ------
@@ -187,7 +188,7 @@ Themes
 Punchline has a theme plug-in system which permits complete customisation of the rendered site, including if
 necessary the JSON feed output.
 
-The interface is still in development, and is not documented at this time.
+The interface is still in development, and is not documented just now.
 
 In the meantime, for rebranding and layout changes, please edit the local copy of *bfost.css* after your site
 is rendered in the default theme.
