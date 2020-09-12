@@ -1,8 +1,6 @@
 Punchline
 :::::::::
 
-.. note:: This code is pre-Release.
-
 What worried me recently
 ++++++++++++++++++++++++
 

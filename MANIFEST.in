@@ -7,3 +7,4 @@ recursive-include . *.rst
 recursive-include . *.otf
 recursive-include . *.woff
 recursive-include . *.woff2
+global-exclude uuid.hex
