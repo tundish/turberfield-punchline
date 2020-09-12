@@ -114,8 +114,8 @@ If you want to see this example working on your PC, follow the steps for install
 
     .. _questions: https://en.wikipedia.org/wiki/Questions_(game)
 
-Concepts
-========
+Guide
+=====
 
 Punchline dialogue is written in reStructuredText_ and incorporates the extensions from the 
 `Turberfield dialogue library`_.
@@ -225,7 +225,10 @@ Linux and Mac users will need to adjust the execution path where necessary.
 
     ~/py3.8-blog/Scripts/python -m http.server -d turberfield/punchline/examples/output/
 
-#. Read the options available when running ``punchline``::
+Further steps
+=============
+
+Read the options available when running ``punchline``::
 
     ~/py3-blog/Scripts/punchline.exe --help
 
