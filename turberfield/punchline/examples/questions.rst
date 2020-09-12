@@ -1,11 +1,12 @@
 
 .. This is a comment. What follows is metadata
 
-:made_at: 2020-08-29
-:view_at: 2020-09-01
-:author:  Tom Stoppard
+:made_at:   2020-08-29
+:view_at:   2020-09-01
+:author:    tundish
+:author:    Tom Stoppard
 
-.. And here we declare the voices used in the dialogue.
+.. Now we declare the voices used in the dialogue.
 
 .. entity:: ROSENCRANTZ
    :types: turberfield.punchline.types.Eponymous
@@ -13,19 +14,19 @@
 .. entity:: GUILDENSTERN
    :types: turberfield.punchline.types.Eponymous
 
-.. Dialogue scripts have a top-level title. Think of it a theatrical scene.
+.. Dialogue scripts have a top-level title. Think of it as the name of a theatrical scene.
 
 The Game of Questions
 =====================
 
-.. Second-level titles represent shots in the scene. Here is the first of three,
+.. Second-level titles represent shots in the scene. Here is the first of three.
 
 First point
 -----------
 
 [ROSENCRANTZ]_
 
-    Do you want to play questions?
+    Do you want to play questions_?
 
 [GUILDENSTERN]_
 
@@ -78,3 +79,5 @@ Third point
     Foul! No repetitions.
 
     Three, Love and Game.
+
+.. _questions: https://en.wikipedia.org/wiki/Questions_(game)

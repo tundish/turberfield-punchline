@@ -48,7 +48,7 @@ If you want to see this example working on your PC, follow the steps for install
     .. entity:: GUILDENSTERN
        :types: turberfield.punchline.types.Eponymous
 
-    .. Dialogue scripts have a top-level title. Think of it a theatrical scene.
+    .. Dialogue scripts have a top-level title. Think of it as the name of a theatrical scene.
 
     The Game of Questions
     =====================
@@ -60,7 +60,7 @@ If you want to see this example working on your PC, follow the steps for install
 
     [ROSENCRANTZ]_
 
-        Do you want to play questions?
+        Do you want to play questions_?
 
     [GUILDENSTERN]_
 
@@ -113,6 +113,8 @@ If you want to see this example working on your PC, follow the steps for install
         Foul! No repetitions.
 
         Three, Love and Game.
+
+    .. _questions: https://en.wikipedia.org/wiki/Questions_(game)
 
 Concepts
 ========
@@ -176,6 +178,9 @@ Installation
 
     ~/py3-blog/Scripts/pip install turberfield-punchline-master.zip
 
+#. Build a blog from the example dialogue::
+
+    ~/py3-blog/Scripts/python -m turberfield.punchline.main turberfield/punchline/examples/
 
 .. _JSON Feed: https://jsonfeed.org/version/1.1
 .. _web rings: https://www.mic.com/p/how-geocities-webrings-made-the-90s-internet-a-cozier-place-19638198
