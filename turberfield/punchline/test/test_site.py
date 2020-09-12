@@ -20,7 +20,7 @@ import datetime
 import textwrap
 import unittest
 
-from turberfield.punchline.build import lifecycle
+from turberfield.punchline.build import Build
 from turberfield.punchline.site import Site
 
 
@@ -90,13 +90,13 @@ class TestBuild(unittest.TestCase):
     def test_lifecycle_parse_error(self):
         data = {"made_at": "202-07-26 18:00", "view_at": "2020-07-27", "edit_at": "2020-07-31T13:28:03"}
         with self.assertRaises(ValueError) as err:
-            rv = lifecycle(data)
+            rv = Build.lifecycle(data)
 
         self.assertTrue("2020-07-31T13:28:03" in str(err.exception))
 
     def test_lifecycle_no_defaults(self):
         data = {"made_at": "2020-07-26 18:00", "view_at": "2020-07-27", "edit_at": "2020-07-31 13:28:03"}
-        rv = lifecycle(data)
+        rv = Build.lifecycle(data)
         self.assertIsInstance(rv, Site.Lifecycle)
         self.assertIsInstance(rv.made_at, datetime.datetime)
         self.assertIsInstance(rv.view_at, datetime.datetime)
@@ -106,7 +106,7 @@ class TestBuild(unittest.TestCase):
     def test_lifecycle_with_defaults(self):
         defaults = Site.Lifecycle(None, None, None, datetime.datetime.now())
         data = {"made_at": "2020-07-26 18:00", "view_at": "2020-07-27", "edit_at": "2020-07-31 13:28:03"}
-        rv = lifecycle(data, defaults)
+        rv = Build.lifecycle(data, defaults)
         self.assertIsInstance(rv, Site.Lifecycle)
         self.assertIsInstance(rv.made_at, datetime.datetime)
         self.assertIsInstance(rv.view_at, datetime.datetime)

@@ -16,7 +16,7 @@
 import textwrap
 import unittest
 
-from turberfield.punchline.build import build_pages
+from turberfield.punchline.build import Build
 from turberfield.punchline.site import Site
 
 
@@ -32,7 +32,7 @@ class SyntaxTests(unittest.TestCase):
         Shot
         ----
         """)
-        page = next(build_pages(text))
+        page = next(Build.build_pages(text))
         rv = page.model.metadata
         self.assertEqual(2, len(rv))
         self.assertTrue(all(k == "tag" for k, v in rv))
@@ -47,7 +47,7 @@ class SyntaxTests(unittest.TestCase):
         Shot
         ----
         """)
-        page = next(build_pages(text))
+        page = next(Build.build_pages(text))
         rv = Site.multidict(page.model.metadata)
         self.assertEqual(1, len(rv))
         self.assertEqual(["one", "two"], rv["tag"])
@@ -75,7 +75,7 @@ class SyntaxTests(unittest.TestCase):
 
         C
         """)
-        page = next(build_pages(text))
+        page = next(Build.build_pages(text))
         self.assertEqual(1, len(page.model.shots))
         self.assertEqual(1, len(page.model.shots[0].items))
         self.assertNotIn("B", page.model.shots[0].items[0].text)

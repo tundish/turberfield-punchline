@@ -1,17 +1,20 @@
 Punchline
 :::::::::
 
+.. note:: This code is pre-Release.
+
 What worried me recently
-========================
+++++++++++++++++++++++++
 
 There aren't enough jokes on the web. We need more satire. Urgently.
 
 There is indeed on the web a lot of poetry, but poetry web sites are not poetic places. Or even happy spaces.
 
 And the traditions of personal web sites, `web rings`_, and `web feeds`_ are no longer common practice.
+And I felt sad about that.
 
 What I did about it
-===================
++++++++++++++++++++
 
 I wrote *Punchline*.
 
@@ -20,6 +23,29 @@ measured timing. It supports multimedia too.
 
 Punchline was designed from the ground up to generate `JSON Feed`_. So you can publish your blog as a feed
 under the topics you choose.
+
+User Guide
+++++++++++
+
+Example
+=======
+
+If you want to check this example works on your PC, follow the steps for installation_ first.
+
+Concepts
+========
+
+Metadata
+--------
+
+Releasing content
+-----------------
+
+Config file
+-----------
+
+Themes
+------
 
 Installation
 ============

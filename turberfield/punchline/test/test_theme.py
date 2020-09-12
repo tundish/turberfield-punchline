@@ -17,7 +17,7 @@ import pathlib
 import textwrap
 import unittest
 
-from turberfield.punchline.build import build_pages
+from turberfield.punchline.build import Build
 from turberfield.punchline.site import Site
 from turberfield.punchline.theme import Theme
 
@@ -57,7 +57,7 @@ class ThemeTests(unittest.TestCase):
            :loop: 12
         
         """)
-        pages = list(build_pages(text))
+        pages = list(Build.build_pages(text))
         self.assertEqual(2, len(pages), pages)
         self.assertIsInstance(pages[0], Site.Page)
         self.assertIsInstance(pages[1], Site.Page)
