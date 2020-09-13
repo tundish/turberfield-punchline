@@ -54,7 +54,7 @@ def frame_to_html(frame, ensemble=[], title="", final=False):
 <section class="fit-banner">
 <h1>{heading}</h1>
 </section>
-<aside class="fit-photos">
+<aside class="fit-images">
 {stills}
 </aside>
 <div class="fit-speech">

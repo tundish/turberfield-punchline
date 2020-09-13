@@ -17,68 +17,20 @@ vertical-align: baseline;
 }
 
 @font-face {
-font-family: "AA Paro";
-src: local("AA Paro"), local("AAParo-Regular"),
-    url(/fonts/AAParo-Regular.otf) format("opentype");
+font-family: "Bernier Regular";
+src: local("Bernier Regular"), local("BernierRegular-Regular"),
+    url(/fonts/BERNIERRegular-Regular.otf) format("opentype"),
+    url(/fonts/BERNIERRegular-Regular.ttf) format("ttf");
 font-weight: 100 950;
 }
 
 @font-face {
-font-family: "Inknut Antiqua";
-src: local("Inknut Antiqua Light"), local("InknutAntiqua-Light"),
-    url(/fonts/InknutAntiqua-Light.woff2) format("woff2"),
-    url(/fonts/InknutAntiqua-Light.woff) format("woff");
-font-weight: 300;
+font-family: "Bernier Shade";
+src: local("Bernier Shade"), local("BernierShade-Regular"),
+    url(/fonts/BERNIERShade-Regular.otf) format("opentype"),
+    url(/fonts/BERNIERShade-Regular.ttf) format("ttf");
+font-weight: 100 950;
 }
-
-@font-face {
-font-family: "Inknut Antiqua";
-src: local("Inknut Antiqua"), local("InknutAntiqua-Regular"),
-    url(/fonts/InknutAntiqua-Regular.woff2) format("woff2"),
-    url(/fonts/InknutAntiqua-Regular.woff) format("woff");
-font-weight: 400;
-}
-
-@font-face {
-font-family: "Inknut Antiqua";
-src: local("Inknut Antiqua Medium"), local("InknutAntiqua-Medium"),
-    url(/fonts/InknutAntiqua-Medium.woff2) format("woff2"),
-    url(/fonts/InknutAntiqua-Medium.woff) format("woff");
-font-weight: 500;
-}
-
-@font-face {
-font-family: "Inknut Antiqua";
-src: local("Inknut Antiqua SemiBold"), local("InknutAntiqua-SemiBold"),
-    url(/fonts/InknutAntiqua-SemiBold.woff2) format("woff2"),
-    url(/fonts/InknutAntiqua-SemiBold.woff) format("woff");
-font-weight: 600;
-}
-
-@font-face {
-font-family: "Inknut Antiqua";
-src: local("Inknut Antiqua Bold"), local("InknutAntiqua-Bold"),
-    url(/fonts/InknutAntiqua-Bold.woff2) format("woff2"),
-    url(/fonts/InknutAntiqua-Bold.woff) format("woff");
-font-weight: 700;
-}
-
-@font-face {
-font-family: "Inknut Antiqua";
-src: local("Inknut Antiqua ExtraBold"), local("InknutAntiqua-ExtraBold"),
-    url(/fonts/InknutAntiqua-ExtraBold.woff2) format("woff2"),
-    url(/fonts/InknutAntiqua-ExtraBold.woff) format("woff");
-font-weight: 800;
-}
-
-@font-face {
-font-family: "Inknut Antiqua";
-src: local("Inknut Antiqua Black"), local("InknutAntiqua-Black"),
-    url(/fonts/InknutAntiqua-Black.woff2) format("woff2"),
-    url(/fonts/InknutAntiqua-Black.woff) format("woff");
-font-weight: 900;
-}
-
 
 /*  Fit  */
 
@@ -86,30 +38,31 @@ body {
 display: grid;
 grid-template-columns: 3fr 5fr 1fr;
 grid-template-areas:
-"banner  speech  photos";
+"banner  speech  images";
 height: 100vh;
 }
 
 .fit-banner {
 background-color: var(--creamy, white);
 border-left: 0.25rem solid var(--pebble, grey);
+color: var(--stormy grey);
 font-family: var(--titles);
 grid-area: banner;
 padding-left: 1.0rem;
 }
 
-.fit-photos {
+.fit-images {
 align-items: center;
 background-color: var(--pebble, grey);
 border-left: 1rem solid var(--creamy, white);
 display: flex;
 flex-direction: column;
-grid-area: photos;
+grid-area: images;
 min-width: 128px;
 }
 
 .fit-speech {
-background-color: var(--banana);
+background-color: var(--creamy);
 display: flex;
 flex-direction: column;
 grid-area: speech;
@@ -121,7 +74,7 @@ body {
 display: grid;
 grid-template-columns: 5fr 1fr;
 grid-template-areas:
-"speech  photos"
+"speech  images"
 }
 
 .fit-banner {
@@ -239,25 +192,16 @@ padding: 0.35rem 0.7rem 0.35rem 0.7rem;
 width: 100%;
 }
 
-input {
-font-family: var(--system);
-font-size: 0.70rem;
-letter-spacing: 0.035rem;
-}
-
-input:invalid {
-color: var(--claret, crimson);
-}
-
-input:valid {
+li a{
 color: var(--pebble, grey);
-}
-
-li {
-font-family: var(--titles);
-font-size: 1.2rem;
+font-family: var(--blocks);
+font-size: 1.8rem;
 padding: 0.5em;
 margin: 0.5rem 0 0.5rem 0;
+}
+
+li a:hover {
+border: 2px solid var(--pebble, grey);
 }
 
 
@@ -276,11 +220,9 @@ content: ": ";
 }
 
 button {
-background-color: var(--collie, limegreen);
-border: 2px solid var(--pebble, grey);
-color: var(--creamy, white);
+color: var(--pebble, grey);
 letter-spacing: 0.125rem;
-font-family: var(--titles);
+font-family: var(--blocks);
 font-size: 1.6rem;
 margin: 1rem;
 min-width: 6rem;
@@ -289,7 +231,7 @@ width: fit-content(15rem);
 }
 
 button:hover {
-border: 2px solid var(--creamy, white);
+border: 2px solid var(--pebble, grey);
 }
 
 .fit-banner h1 {
@@ -299,21 +241,18 @@ font-size: 7rem;
 }
 
 .fit-banner h1 span:nth-child(1) {
-color: var(--pebble, grey);
+color: var(--tobacc, brown);
 }
 
 .fit-banner h1 span:nth-child(2) {
-color: var(--claret, crimson);
+color: var(--office, blue);
 }
 
 .fit-banner h1 span:nth-child(3) {
-color: var(--collie, limegreen);
+color: var(--combat, darkgreen);
 }
 
-.fit-banner h2 {
-color: var(--banana, gold);
-letter-spacing: 0.225rem;
-text-shadow: var(--pebble, grey) 0rem 0.1rem 0.05rem, var(--pebble, grey) 0rem -0.1rem 0.05rem,
-             var(--pebble, grey) 0.1rem 0rem 0.25rem, var(--pebble, grey) -0.1rem 0rem 0.25rem;
+.fit-banner h1 span:nth-child(4) {
+color: var(--stormy, darkslategray);
 }
 

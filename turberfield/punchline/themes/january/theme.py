@@ -27,31 +27,25 @@ from turberfield.punchline.theme import Theme
 import turberfield.punchline.themes.january.render as render
 
 
-"""
-<html>
-<link rel="alternate" type="application/json" title="JSON Feed" href="https://www.example.com/feeds/all.json">
-<link rel="alternate" type="application/json" title="JSON Feed" href="https://www.example.com/feeds/my_category.json">
-</html>
-"""
-
-
 class January(Theme):
 
     definitions = {
         "creamy": "hsl(50, 0%, 100%, 1.0)",
         "pebble": "hsl(13, 0%, 30%, 1.0)",
-        "claret": "hsl(13, 80%, 55%, 1.0)",
-        "blonde": "hsl(50, 80%, 35%, 1.0)",
-        "bubble": "hsl(320, 100%, 50%, 1.0)",
+        "stormy": "hsl(13, 0%, 20%, 0.7)",
+        "office": "hsl(224, 70%, 16%, 0.7)",
+        "tobacc": "hsl(37, 93%, 12%, 0.7)",
+        "combat": "hsl(86, 93%, 12%, 0.7)",
         "forest": "hsl(76, 80%, 35%, 1.0)",
         "rafter": "hsl(36, 20%, 18%, 1.0)",
-        "titles": '"AA Paro", sans-serif',
+        "titles": '"Bernier Shade", sans-serif',
+        "blocks": '"Bernier Regular", sans-serif',
         "mono": ", ".join([
             "SFMono-Regular", "Menlo", "Monaco",
             "Consolas", '"Liberation Mono"',
             '"Courier New"', "monospace"
         ]),
-        "detail": '"Inknut Antiqua", sans-serif',
+        "detail": '"Palatino Linotype", "Book Antiqua", Palatino, serif',
         "system": ", ".join([
             "BlinkMacSystemFont", '"Segoe UI"', '"Helvetica Neue"',
             '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"',
@@ -60,7 +54,7 @@ class January(Theme):
     }
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        for d in ("css",):
+        for d in ("css", "fonts"):
             with importlib.resources.path("turberfield.punchline.themes.january", d) as path:
                 shutil.copytree(path, self.root.joinpath(d), dirs_exist_ok=True)
 
