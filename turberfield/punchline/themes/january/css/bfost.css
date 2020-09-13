@@ -253,12 +253,13 @@ input:valid {
 color: var(--pebble, grey);
 }
 
-#input-assembly-url {
-height: 1.6rem;
-min-width: 24rem;
-margin: 0.6rem;
-padding-left: 0.6rem;
+li {
+font-family: var(--titles);
+font-size: 1.2rem;
+padding: 0.5em;
+margin: 0.5rem 0 0.5rem 0;
 }
+
 
 label {
 color: var(--creamy, white);

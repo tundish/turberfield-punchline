@@ -51,6 +51,7 @@ class January(Theme):
             "Consolas", '"Liberation Mono"',
             '"Courier New"', "monospace"
         ]),
+        "detail": '"Inknut Antiqua", sans-serif',
         "system": ", ".join([
             "BlinkMacSystemFont", '"Segoe UI"', '"Helvetica Neue"',
             '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"',
