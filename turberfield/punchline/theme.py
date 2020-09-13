@@ -99,7 +99,7 @@ class Theme:
                 "content_html": page.html,
             }
             if page.lifecycle.view_at:
-                item["date_published"] = page.lifecycle.view_at.isoformat()
+                item["date_published"] = page.lifecycle.view_at.date().isoformat()
             if page.lifecycle.edit_at:
                 item["date_modified"] = page.lifecycle.edit_at.isoformat()
             if "summary" in metadata:

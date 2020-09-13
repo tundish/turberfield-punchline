@@ -66,7 +66,7 @@ def frame_to_html(frame, ensemble=[], title="", final=False):
 <nav>
 <ul>
 <li><form role="form" action="/" method="GET" name="contents">
-{'<button action="submit">Go</button>' if final else ''}
+{'<button action="submit">Home</button>' if final else ''}
 </form></li>
 </ul>
 </nav>
@@ -83,7 +83,11 @@ def frame_to_text(frame, ensemble=[], title="", final=False):
     )
 
 
-def feed_to_html(pages, root, config=None, url_pattern=""):
+def feed_to_html(pages, root, config=None):
+    heading = " ".join(
+        "<span>{0}</span>".format(i)
+        for i in config.defaults()["site_title"].split(" ")
+    ) if config else ""
     feed_list = "\n".join(
         '<li><a href="{0}">{1}</a></li>'.format(page.path.relative_to(root).as_posix(), page.title.title())
         for page in pages
@@ -91,12 +95,10 @@ def feed_to_html(pages, root, config=None, url_pattern=""):
     )
     return f"""
 <section class="fit-banner">
-<h1><span>Blue</span><span>Monday</span><span>78</span></h1>
-<h2>A Turberfield episode</h2>
+<h1>{ heading }</h1>
 </section>
 <div class="fit-speech">
 <main>
-<h1>Contents</h1>
 <ul>
 { feed_list }
 </ul>
@@ -127,12 +129,13 @@ def body_html(title="", refresh=None, next_=""):
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>{title}</title>
 <link rel="stylesheet" href="/css/bfost.css" />
+{{0}}
 </head>
 <body>
 <style type="text/css">
-{{0}}
-</style>
 {{1}}
+</style>
+{{2}}
 </body>
 </html>"""
 

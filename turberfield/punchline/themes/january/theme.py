@@ -15,6 +15,7 @@
 
 import importlib
 import importlib.resources
+import logging
 import pathlib
 import shutil
 import sys
@@ -76,21 +77,28 @@ class January(Theme):
                     refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
                     title=page.title.capitalize(),
                 ).format(
+                    "",
                     render.dict_to_css(self.definitions),
-                    render.frame_to_html(frame, title=page.title.capitalize(), final=not presenter.pending)
+                    render.frame_to_html(
+                        frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
+                    )
                 )
                 path = self.frame_path(page, n)
                 yield page._replace(ordinal=n, text=text, html=html, path=path)
 
-    def render_feeds(self, pages, *args, **kwargs):
-
+    def render_with_feeds(self, pages, feeds: dict, *args, **kwargs):
+        feed_links = "\n".join([
+            '<link rel="alternate" type="application/json" title="{0[feed_title]}" href="{0[feed_url]}" />'.format(i)
+            for i in feeds.values()
+        ])
         for n, title in enumerate(("index",)):
             yield Site.Page(
                 key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
                 title=title.capitalize(),
                 model=None,
-                text="This is the index page.",
+                text="",
                 html=render.body_html(title=title).format(
+                    feed_links,
                     render.dict_to_css(self.definitions),
                     render.feed_to_html(pages, self.root, self.cfg),
                 ),
@@ -101,5 +109,6 @@ class January(Theme):
     def render(self, pages, *args, **kwargs):
         self.root = self.root or pathlib.Path(*min(i.path.parts for i in pages))
         pages = list(self.render_pages(pages, *args, **kwargs))
+        feeds = {feed_name: self.get_feed_settings(feed_name) for page in pages for feed_name in page.feeds}
         yield from pages
-        yield from self.render_feeds(pages, *args, **kwargs)
+        yield from self.render_with_feeds(pages, feeds, *args, **kwargs)

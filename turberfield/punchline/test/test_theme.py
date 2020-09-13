@@ -75,4 +75,4 @@ class TestPublish(unittest.TestCase):
         self.assertIn("feed_title", settings)
 
         rv = theme.publish([], **settings)
-        self.fail(rv)
+        self.assertEqual("https://jsonfeed.org/version/1.1", rv.get("version"))
