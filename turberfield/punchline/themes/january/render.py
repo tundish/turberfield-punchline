@@ -89,7 +89,11 @@ def feed_to_html(pages, root, config=None):
         for i in config.defaults()["site_title"].split(" ")
     ) if config else ""
     feed_list = "\n".join(
-        '<li><a href="{0}">{1}</a></li>'.format(page.path.relative_to(root).as_posix(), page.title.title())
+        '<li><a href="{0}{1}">{2}</a></li>'.format(
+            config.defaults()["site_url"] if config else "",
+            page.path.relative_to(root).as_posix(),
+            page.title.title()
+        )
         for page in pages
         if not page.ordinal
     )

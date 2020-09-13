@@ -168,6 +168,7 @@ specify the file by using the ``--config`` option to the punchline tool (see bel
 Punchline comes with a default configuration file which looks like this::
 
     [DEFAULT]
+    site_title = My Punchline site
     site_url = /
     feed_title = Site Feed
     feed_name = all
@@ -180,7 +181,7 @@ This is the bare minimum you need to configure a feed for *all* category tags.
 Copy this file and create a section for each feed category you want to publish.
 
 You should edit the ``site_url`` variable in the ``[DEFAULT]`` section.
-Change it to the URL of your live web site.
+Change it to the URL of your live web site. Likewise with ``site_title``.
 
 Themes
 ------
