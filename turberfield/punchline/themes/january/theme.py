@@ -30,14 +30,13 @@ import turberfield.punchline.themes.january.render as render
 class January(Theme):
 
     definitions = {
-        "creamy": "hsl(50, 0%, 100%, 1.0)",
-        "pebble": "hsl(13, 0%, 30%, 1.0)",
-        "stormy": "hsl(13, 0%, 20%, 0.7)",
-        "office": "hsl(224, 70%, 16%, 0.7)",
-        "tobacc": "hsl(37, 93%, 12%, 0.7)",
-        "combat": "hsl(86, 93%, 12%, 0.7)",
-        "forest": "hsl(76, 80%, 35%, 1.0)",
-        "rafter": "hsl(36, 20%, 18%, 1.0)",
+        #"washout": "hsl(50, 0%, 100%, 1.0)",
+        #"shadows": "hsl(37, 93%, 12%, 0.7)",
+        #"midtone": "hsl(86, 93%, 12%, 0.7)",
+        #"hilight": "hsl(224, 70%, 16%, 0.7)",
+        #"glamour": "hsl(76, 80%, 35%, 1.0)",
+        #"gravity": "hsl(36, 20%, 18%, 1.0)",
+
         "titles": '"Bernier Shade", sans-serif',
         "blocks": '"Bernier Regular", sans-serif',
         "mono": ", ".join([
