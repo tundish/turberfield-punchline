@@ -30,13 +30,6 @@ import turberfield.punchline.themes.january.render as render
 class January(Theme):
 
     definitions = {
-        #"washout": "hsl(50, 0%, 100%, 1.0)",
-        #"shadows": "hsl(37, 93%, 12%, 0.7)",
-        #"midtone": "hsl(86, 93%, 12%, 0.7)",
-        #"hilight": "hsl(224, 70%, 16%, 0.7)",
-        #"glamour": "hsl(76, 80%, 35%, 1.0)",
-        #"gravity": "hsl(36, 20%, 18%, 1.0)",
-
         "titles": '"Bernier Shade", sans-serif',
         "blocks": '"Bernier Regular", sans-serif',
         "mono": ", ".join([
@@ -101,6 +94,10 @@ class January(Theme):
             )
 
     def render(self, pages, *args, **kwargs):
+        self.definitions = self.definitions.copy()
+        if "theme" in self.cfg:
+            self.definitions.update(self.cfg["theme"])
+
         self.root = self.root or pathlib.Path(*min(i.path.parts for i in pages))
         pages = list(self.render_pages(pages, *args, **kwargs))
         feeds = {feed_name: self.get_feed_settings(feed_name) for page in pages for feed_name in page.feeds}
