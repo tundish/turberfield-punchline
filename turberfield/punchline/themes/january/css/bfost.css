@@ -204,7 +204,7 @@ margin: 0.5rem 0 0.5rem 0;
 }
 
 li a:hover {
-border: 1px solid var(--shadows, grey);
+border: 1px dashed var(--shadows, grey);
 color: var(--glamour, steelblue);
 }
 

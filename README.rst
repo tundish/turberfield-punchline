@@ -70,7 +70,7 @@ If you want to see this example working on your PC, follow the steps for install
 
     [GUILDENSTERN]_
 
-        Statement! One, Love.
+        Statement! One - Love.
 
     Second point
     ------------
@@ -89,7 +89,7 @@ If you want to see this example working on your PC, follow the steps for install
 
     [GUILDENSTERN]_
 
-        Statement! Two, Love.
+        Statement! Two - Love.
 
     Third point
     -----------
@@ -110,7 +110,7 @@ If you want to see this example working on your PC, follow the steps for install
 
         Foul! No repetitions.
 
-        Three, Love and Game.
+        Three - Love and Game.
 
     .. _questions: https://en.wikipedia.org/wiki/Questions_(game)
 

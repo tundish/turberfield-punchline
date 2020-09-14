@@ -86,16 +86,18 @@ class Theme:
             "items": [],
         }
 
-        items = {k: list(v) for k, v in itertools.groupby(pages, key=operator.attrgetter("key"))}
+        items = {k: list(v) for k, v in itertools.groupby(
+            sorted(pages, key=operator.attrgetter("key")), key=operator.attrgetter("key")
+        )}
         for _, series in sorted(items.items()):
             page = series[0]
             metadata = Site.multidict(page.model.metadata)
-            page_path = page.path.relative_to(self.root).as_posix()
+            page_path = page.path.relative_to(self.root).as_posix() if self.root else page.path
             item = {
                 "id": f"{site_url}{page_path}",
                 "url": f"{site_url}{page_path}",
                 "title": page.title.title(),
-                "content_text": "\n".join([i.text for i in series]),
+                "content_text": "\n".join([i.text or "" for i in series]),
                 "content_html": page.html,
             }
             if page.lifecycle.view_at:

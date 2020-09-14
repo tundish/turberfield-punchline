@@ -55,7 +55,7 @@ class ThemeTests(unittest.TestCase):
            :offset: 0
            :duration: 8000
            :loop: 12
-        
+
         """)
         pages = list(Build.build_pages(text))
         self.assertEqual(2, len(pages), pages)
@@ -63,7 +63,8 @@ class ThemeTests(unittest.TestCase):
         self.assertIsInstance(pages[1], Site.Page)
 
         theme = Theme()
-        pages = theme.render({})
+        rv = list(theme.render(pages))
+        self.assertEqual(pages, rv)
 
 
 class TestPublish(unittest.TestCase):
@@ -76,3 +77,78 @@ class TestPublish(unittest.TestCase):
 
         rv = theme.publish([], **settings)
         self.assertEqual("https://jsonfeed.org/version/1.1", rv.get("version"))
+
+    def test_publish_multipages(self):
+        text = textwrap.dedent("""
+        Page One
+        ========
+
+        Shot One
+        --------
+
+        The text.
+
+        .. fx:: tor.static.img  street.jpg
+           :offset: 0
+           :duration: 0
+
+        Page Two
+        ========
+
+        Shot Two
+        --------
+
+        More text.
+
+        .. fx:: turberfield.punchline.media  audio/fly_away.mp3
+           :offset: 0
+           :duration: 8000
+           :loop: 12
+
+        """)
+        pages = list(Build.build_pages(text))
+        self.assertEqual(2, len(pages), pages)
+        self.assertIsInstance(pages[0], Site.Page)
+        self.assertIsInstance(pages[1], Site.Page)
+
+        theme = Theme()
+        pages = theme.render(pages)
+        settings = theme.get_feed_settings("all")
+        feed = theme.publish(pages, **settings)
+        self.assertEqual(2, len(feed["items"]))
+
+    def test_publish_multishots(self):
+        text = textwrap.dedent("""
+        Page One
+        ========
+
+        Shot One
+        --------
+
+        The text.
+
+        .. fx:: tor.static.img  street.jpg
+           :offset: 0
+           :duration: 0
+
+        Shot Two
+        --------
+
+        More text.
+
+        .. fx:: turberfield.punchline.media  audio/fly_away.mp3
+           :offset: 0
+           :duration: 8000
+           :loop: 12
+
+        """)
+        pages = list(Build.build_pages(text))
+        self.assertEqual(1, len(pages), pages)
+        self.assertIsInstance(pages[0], Site.Page)
+
+        theme = Theme()
+        pages = theme.render(pages)
+        settings = theme.get_feed_settings("all")
+        feed = theme.publish(pages, **settings)
+        self.assertEqual(1, len(feed["items"]))
+
