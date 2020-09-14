@@ -168,7 +168,7 @@ specify the file by using the ``--config`` option to the punchline tool (see bel
 Punchline comes with a default configuration file which looks like this::
 
     [DEFAULT]
-    site_title = My Punchline site
+    site_title = Your Blog Name Here
     site_url = /
     feed_title = Site Feed
     feed_name = all
