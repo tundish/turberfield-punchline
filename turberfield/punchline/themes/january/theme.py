@@ -29,28 +29,30 @@ import turberfield.punchline.themes.january.render as render
 
 class January(Theme):
 
-    definitions = {
-        "titles": '"Bernier Shade", sans-serif',
-        "blocks": '"Bernier Regular", sans-serif',
-        "mono": ", ".join([
-            "SFMono-Regular", "Menlo", "Monaco",
-            "Consolas", '"Liberation Mono"',
-            '"Courier New"', "monospace"
-        ]),
-        "detail": '"Palatino Linotype", "Book Antiqua", Palatino, serif',
-        "system": ", ".join([
-            "BlinkMacSystemFont", '"Segoe UI"', '"Helvetica Neue"',
-            '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"',
-            "Arial", "sans-serif"
-        ]),
-    }
-
     def __exit__(self, exc_type, exc_val, exc_tb):
         for d in ("css", "fonts"):
             with importlib.resources.path("turberfield.punchline.themes.january", d) as path:
                 shutil.copytree(path, self.root.joinpath(d), dirs_exist_ok=True)
 
         return False
+
+    @property
+    def definitions(self):
+        return {
+            "titles": '"Bernier Shade", sans-serif',
+            "blocks": '"Bernier Regular", sans-serif',
+            "mono": ", ".join([
+                "SFMono-Regular", "Menlo", "Monaco",
+                "Consolas", '"Liberation Mono"',
+                '"Courier New"', "monospace"
+            ]),
+            "detail": '"Palatino Linotype", "Book Antiqua", Palatino, serif',
+            "system": ", ".join([
+                "BlinkMacSystemFont", '"Segoe UI"', '"Helvetica Neue"',
+                '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"',
+                "Arial", "sans-serif"
+            ]),
+        }
 
     def render_pages(self, pages, *args, **kwargs):
         for page in pages:
@@ -65,7 +67,7 @@ class January(Theme):
                     title=page.title.capitalize(),
                 ).format(
                     "",
-                    render.dict_to_css(self.definitions),
+                    render.dict_to_css(vars(self.settings)),
                     render.frame_to_html(
                         frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
                     )
@@ -86,7 +88,7 @@ class January(Theme):
                 text="",
                 html=render.body_html(title=title).format(
                     feed_links,
-                    render.dict_to_css(self.definitions),
+                    render.dict_to_css(vars(self.settings)),
                     render.feed_to_html(pages, self.root, self.cfg),
                 ),
                 path=self.root.joinpath(title).with_suffix(".html"),
@@ -94,10 +96,6 @@ class January(Theme):
             )
 
     def render(self, pages, *args, **kwargs):
-        self.definitions = self.definitions.copy()
-        if "theme" in self.cfg:
-            self.definitions.update(self.cfg["theme"])
-
         self.root = self.root or pathlib.Path(*min(i.path.parts for i in pages))
         pages = list(self.render_pages(pages, *args, **kwargs))
         feeds = {feed_name: self.get_feed_settings(feed_name) for page in pages for feed_name in page.feeds}

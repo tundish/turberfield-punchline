@@ -20,6 +20,7 @@ import unittest
 from turberfield.punchline.build import Build
 from turberfield.punchline.site import Site
 from turberfield.punchline.theme import Theme
+from turberfield.punchline.types import Settings
 
 
 class ThemeTests(unittest.TestCase):
@@ -29,6 +30,13 @@ class ThemeTests(unittest.TestCase):
         rv = Theme.slug(text)
         self.assertEqual("abab234-_-", rv)
 
+    def test_settings(self):
+        cfg = Settings.config_parser()
+        theme = Theme(cfg)
+        self.assertTrue(hasattr(theme, "settings"))
+        self.assertIsInstance(theme.settings, Settings)
+        self.assertTrue(hasattr(theme.settings, "id"))
+ 
     def test_render_multipages(self):
         text = textwrap.dedent("""
         Page One

@@ -26,6 +26,7 @@ import string
 
 from turberfield.dialogue.model import Model
 from turberfield.punchline.site import Site
+from turberfield.punchline.types import Settings
 
 
 Lifecycle = namedtuple("Lifecycle", ["made_at", "view_at", "edit_at", "drop_at"])
@@ -56,6 +57,8 @@ class Theme:
     def __init__(self, cfg=None, root=None, **kwargs):
         self.cfg = cfg
         self.root = root
+        theme_section = self.cfg["theme"] if self.cfg and "theme" in self.cfg else {}
+        self.settings = Settings(**dict(self.definitions, **theme_section))
 
     def __enter__(self):
         return self
@@ -72,6 +75,10 @@ class Theme:
             return {"site_url": "/", "feed_name": "all", "feed_url": "/feed.json", "feed_title": "JSON Feed"}
 
         return section
+
+    @property
+    def definitions(self):
+        return dict()
 
     def render(self, pages, *args, **kwargs):
         return pages

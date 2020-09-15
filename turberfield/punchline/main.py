@@ -31,18 +31,12 @@ import sys
 
 from turberfield.dialogue.model import SceneScript
 from turberfield.dialogue.types import Persona
+
 from turberfield.punchline.build import Build
+from turberfield.punchline.types import Settings
+
 from turberfield.utils.misc import gather_installed
 from turberfield.utils.misc import group_by_type
-
-
-def config_parser():
-    cfg = configparser.ConfigParser(
-        interpolation=configparser.ExtendedInterpolation(),
-        converters={"path": pathlib.Path},
-    )
-    cfg.optionxform = str
-    return cfg
 
 
 def parser():
@@ -70,14 +64,10 @@ def main(args):
         level=logging.INFO
     )
     for cfg_path in args.config:
-        cfg = config_parser()
+        cfg = Settings.config_parser()
         cfg.read(cfg_path)
         # logging.config.fileConfig(cfg, disable_existing_loggers=False)
-
         logging.info("Using config file at {0}".format(cfg_path))
-        for path in args.inputs:
-            output = args.output or path.joinpath("output")
-            pages = [i._replace(path=output.resolve()) for i in Build.filter_pages(Build.find_pages(path))]
 
         # Discover themes
         themes = dict(gather_installed("turberfield.interfaces.theme"))
@@ -86,6 +76,11 @@ def main(args):
         # Select theme
         theme_module = importlib.import_module("turberfield.punchline.themes.january")
         theme = theme_module.January(cfg)
+        logging.info(theme.settings)
+
+        for path in args.inputs:
+            output = args.output or path.joinpath("output")
+            pages = [i._replace(path=output.resolve()) for i in Build.filter_pages(Build.find_pages(path))]
 
         feeds = defaultdict(set)
         with theme as writer:
