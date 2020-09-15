@@ -18,9 +18,15 @@ import unittest
 
 from turberfield.punchline.build import Build
 from turberfield.punchline.site import Site
+from turberfield.punchline.theme import Theme
+from turberfield.punchline.types import Settings
 
 
 class SyntaxTests(unittest.TestCase):
+
+    def setUp(self):
+        cfg = Settings.config_parser()
+        self.theme = Theme(cfg)
 
     def test_tags(self):
         text = textwrap.dedent("""
@@ -32,7 +38,7 @@ class SyntaxTests(unittest.TestCase):
         Shot
         ----
         """)
-        page = next(Build.build_pages(text))
+        page = next(Build.build_pages(text, self.theme))
         rv = page.model.metadata
         self.assertEqual(2, len(rv))
         self.assertTrue(all(k == "tag" for k, v in rv))
@@ -47,7 +53,7 @@ class SyntaxTests(unittest.TestCase):
         Shot
         ----
         """)
-        page = next(Build.build_pages(text))
+        page = next(Build.build_pages(text, self.theme))
         rv = Site.multidict(page.model.metadata)
         self.assertEqual(1, len(rv))
         self.assertEqual(["one", "two"], rv["tag"])
@@ -75,7 +81,7 @@ class SyntaxTests(unittest.TestCase):
 
         C
         """)
-        page = next(Build.build_pages(text))
+        page = next(Build.build_pages(text, self.theme))
         self.assertEqual(1, len(page.model.shots))
         self.assertEqual(1, len(page.model.shots[0].items))
         self.assertNotIn("B", page.model.shots[0].items[0].text)

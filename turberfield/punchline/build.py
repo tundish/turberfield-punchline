@@ -67,16 +67,16 @@ class Build:
             return rv
 
     @staticmethod
-    def build_pages(text, uid=None, path:pathlib.Path=None, name="inline", now=None):
-        model = Build.build_model(text, uid, path)
+    def build_pages(text, theme, uid=None, path:pathlib.Path=None, name="inline", now=None):
+        model = Build.build_model(text, theme, uid, path)
         yield from Build.pages_from_model(model, name, now)
 
     @staticmethod
-    def build_model(text, uid=None, path:pathlib.Path=None, model_type=ModelAssignsStrings):
+    def build_model(text, theme, uid=None, path:pathlib.Path=None, model_type=ModelAssignsStrings):
         uid = uid or uuid.uuid4()
         path = path or pathlib.Path(".")
         script = SceneScript(path, doc=SceneScript.read(text))
-        ensemble = list(Eponymous.create(script))
+        ensemble = list(Eponymous.create(script)) + [theme.settings]
         script.cast(script.select(ensemble))
         model = script.run()
         return model
@@ -96,11 +96,11 @@ class Build:
             )
 
     @staticmethod
-    def find_pages(root: pathlib.Path):
+    def find_pages(root: pathlib.Path, theme: Theme):
         for parent in {i.parent for i in root.glob("**/*.rst")}:
             uid = Build.write_folder_id(parent)
             for path in parent.glob("*.rst"):
-                yield from Build.build_pages(path.read_text(), uid=uid, path=path, name=path.stem)
+                yield from Build.build_pages(path.read_text(), theme, uid=uid, path=path, name=path.stem)
 
     @staticmethod
     def filter_pages(pages, now=None):

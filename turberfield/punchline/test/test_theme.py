@@ -65,7 +65,9 @@ class ThemeTests(unittest.TestCase):
            :loop: 12
 
         """)
-        pages = list(Build.build_pages(text))
+        cfg = Settings.config_parser()
+        theme = Theme(cfg)
+        pages = list(Build.build_pages(text, theme))
         self.assertEqual(2, len(pages), pages)
         self.assertIsInstance(pages[0], Site.Page)
         self.assertIsInstance(pages[1], Site.Page)
@@ -114,7 +116,9 @@ class TestPublish(unittest.TestCase):
            :loop: 12
 
         """)
-        pages = list(Build.build_pages(text))
+        cfg = Settings.config_parser()
+        theme = Theme(cfg)
+        pages = list(Build.build_pages(text, theme))
         self.assertEqual(2, len(pages), pages)
         self.assertIsInstance(pages[0], Site.Page)
         self.assertIsInstance(pages[1], Site.Page)
@@ -150,7 +154,9 @@ class TestPublish(unittest.TestCase):
            :loop: 12
 
         """)
-        pages = list(Build.build_pages(text))
+        cfg = Settings.config_parser()
+        theme = Theme(cfg)
+        pages = list(Build.build_pages(text, theme))
         self.assertEqual(1, len(pages), pages)
         self.assertIsInstance(pages[0], Site.Page)
 

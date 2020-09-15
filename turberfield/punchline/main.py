@@ -80,7 +80,7 @@ def main(args):
 
         for path in args.inputs:
             output = args.output or path.joinpath("output")
-            pages = [i._replace(path=output.resolve()) for i in Build.filter_pages(Build.find_pages(path))]
+            pages = [i._replace(path=output.resolve()) for i in Build.filter_pages(Build.find_pages(path, theme))]
 
         feeds = defaultdict(set)
         with theme as writer:
