@@ -78,7 +78,8 @@ class Build:
         script = SceneScript(path, doc=SceneScript.read(text))
         ensemble = list(Eponymous.create(script)) + [theme.settings]
         script.cast(script.select(ensemble))
-        model = script.run()
+        model = model_type(script.fP, script.doc)
+        script.doc.walkabout(model)
         return model
 
     @staticmethod
