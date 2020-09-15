@@ -13,7 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with turberfield.  If not, see <http://www.gnu.org/licenses/>.
 
+import configparser
+import pathlib
+
 from turberfield.dialogue.directives import Entity
+from turberfield.dialogue.types import DataObject
 from turberfield.dialogue.types import Persona
 from turberfield.utils.misc import group_by_type
 
@@ -29,4 +33,18 @@ class Eponymous(Persona):
         entities = group_by_type(script.doc)[Entity.Declaration]
         for entity in entities:
             yield cls(name=cls.name_from_entity(entity))
+
+
+class Settings(DataObject):
+
+    @staticmethod
+    def config_parser():
+        cfg = configparser.ConfigParser(
+            interpolation=configparser.ExtendedInterpolation(),
+            converters={"path": pathlib.Path},
+        )
+        cfg.optionxform = str
+
+        return cfg
+
 

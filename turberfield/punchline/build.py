@@ -22,14 +22,25 @@ import itertools
 import logging
 import operator
 import pathlib
+import re
 import uuid
 
 from turberfield.dialogue.model import SceneScript
+from turberfield.dialogue.model import Model
 
 import turberfield.punchline
 from turberfield.punchline.site import Site
 from turberfield.punchline.theme import Theme
 from turberfield.punchline.types import Eponymous
+
+
+class ModelAssignsStrings(Model):
+
+    def visit_Setter(self, node):
+        ref, attr = node["arguments"][0].split(".")
+        entity = self.get_entity(ref)
+        val = re.compile("\|(\w+)\|").sub(self.substitute_property, node["arguments"][1])
+        self.shots[-1].items.append(Model.Property(self.speaker, entity.persona, attr, val))
 
 
 class Build:
@@ -57,13 +68,22 @@ class Build:
 
     @staticmethod
     def build_pages(text, uid=None, path:pathlib.Path=None, name="inline", now=None):
+        model = Build.build_model(text, uid, path)
+        yield from Build.pages_from_model(model, name, now)
+
+    @staticmethod
+    def build_model(text, uid=None, path:pathlib.Path=None, model_type=ModelAssignsStrings):
         uid = uid or uuid.uuid4()
         path = path or pathlib.Path(".")
-        now = now or datetime.datetime.now()
-        script = SceneScript(path, doc=SceneScript.read(text, name=name))
+        script = SceneScript(path, doc=SceneScript.read(text))
         ensemble = list(Eponymous.create(script))
         script.cast(script.select(ensemble))
         model = script.run()
+        return model
+
+    @staticmethod
+    def pages_from_model(model, name, now=None):
+        now = now or datetime.datetime.now()
         lc = Build.lifecycle(dict(model.metadata))
         data = Site.multidict(model.metadata)
         for n, (scene, shots) in enumerate(itertools.groupby(model.shots, key=operator.attrgetter("scene"))):
@@ -89,7 +109,6 @@ class Build:
             if not page.lifecycle.view_at or page.lifecycle.view_at <= now:
                 if not page.lifecycle.drop_at or page.lifecycle.drop_at > now:
                     yield page
-
 
     @staticmethod
     def feeds_from_pages(pages, default=None, keys=("category", "feed")):
