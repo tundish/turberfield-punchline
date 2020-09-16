@@ -78,6 +78,6 @@ Third point
 
     Foul! No repetitions.
 
-    Three - Love and Game.
+    Three - Love, and Game.
 
 .. _questions: https://en.wikipedia.org/wiki/Questions_(game)

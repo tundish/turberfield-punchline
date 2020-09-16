@@ -35,7 +35,6 @@ from turberfield.dialogue.types import Persona
 from turberfield.punchline.build import Build
 from turberfield.punchline.types import Settings
 
-from turberfield.utils.misc import gather_installed
 from turberfield.utils.misc import group_by_type
 
 
@@ -47,6 +46,10 @@ def parser():
             default=[default_config_path],
             help="Specify one or more site configurations."
         )
+    rv.add_argument(
+        "--theme", type=str, default="january",
+        help="Specify a them to use by name or dotted path to class."
+    )
     rv.add_argument(
         "inputs", nargs="+", type=pathlib.Path,
         help="Set one or more search paths."
@@ -63,32 +66,31 @@ def main(args):
         format="%(asctime)s %(levelname)-8s|%(name)s|%(message)s",
         level=logging.INFO
     )
+    logging.info("Running Punchline")
     for cfg_path in args.config:
         cfg = Settings.config_parser()
         cfg.read(cfg_path)
         # logging.config.fileConfig(cfg, disable_existing_loggers=False)
         logging.info("Using config file at {0}".format(cfg_path))
 
-        # Discover themes
-        themes = dict(gather_installed("turberfield.interfaces.theme"))
-        logging.info(themes)
-
-        # Select theme
-        theme_module = importlib.import_module("turberfield.punchline.themes.january")
-        theme = theme_module.January(cfg)
-        logging.info(theme.settings)
+        theme = Build.find_theme(args.theme, cfg)
+        if not theme:
+            logging.critical("No theme found.")
+            return 1
 
         for path in args.inputs:
             output = args.output or path.joinpath("output")
             pages = [i._replace(path=output.resolve()) for i in Build.filter_pages(Build.find_pages(path, theme))]
+            logging.debug(theme.settings)
 
         feeds = defaultdict(set)
         with theme as writer:
-            for page in writer.render(pages):
+            for n, page in enumerate(writer.render(pages)):
                 page.path.parent.mkdir(parents=True, exist_ok=True)
                 page.path.write_text(page.html)
                 for feed_name in page.feeds:
                     feeds[feed_name].add(page)
+            logging.info("Rendered {0} pages.".format(n))
 
             # Write feed output
             for feed_name, pages in feeds.items():
@@ -100,7 +102,7 @@ def main(args):
                 feed_path.parent.mkdir(parents=True, exist_ok=True)
                 feed_path.write_text(json.dumps(feed, indent=0))
 
-        logging.info(theme.root)
+        logging.info("Wrote output to {0}".format(theme.root))
 
     return 0
 

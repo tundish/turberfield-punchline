@@ -18,6 +18,8 @@
 
 from collections import defaultdict
 import datetime
+import importlib
+import inspect
 import itertools
 import logging
 import operator
@@ -32,6 +34,7 @@ import turberfield.punchline
 from turberfield.punchline.site import Site
 from turberfield.punchline.theme import Theme
 from turberfield.punchline.types import Eponymous
+from turberfield.utils.misc import gather_installed
 
 
 class ModelAssignsStrings(Model):
@@ -73,7 +76,7 @@ class Build:
 
     @staticmethod
     def build_model(text, theme, uid=None, path:pathlib.Path=None, model_type=ModelAssignsStrings):
-        uid = uid or uuid.uuid4()
+        theme.settings.id = uid or theme.settings.id
         path = path or pathlib.Path(".")
         script = SceneScript(path, doc=SceneScript.read(text))
         ensemble = list(Eponymous.create(script)) + [theme.settings]
@@ -102,6 +105,23 @@ class Build:
             uid = Build.write_folder_id(parent)
             for path in parent.glob("*.rst"):
                 yield from Build.build_pages(path.read_text(), theme, uid=uid, path=path, name=path.stem)
+
+    @staticmethod
+    def find_theme(name: str, cfg, default="january"):
+        try:
+            theme_module = importlib.import_module(name)
+            theme_class = next(
+                i for i in vars(theme_module).values()
+                if inspect.isclass(i) and issubclass(i, Theme)
+                and inspect.getmodule(i) is theme_module
+            )
+            logging.info("Selected {0.__name__} theme from '{1}'".format(theme_class, name))
+        except (ModuleNotFoundError, StopIteration):
+            themes = dict(gather_installed("turberfield.interfaces.theme"))
+            theme_class = themes.get(name) or themes.get(default)
+            logging.info("Selected '{0.__name__}' theme from [ {1} ]".format(theme_class, ",".join(themes.keys())))
+
+        return theme_class and theme_class(cfg)
 
     @staticmethod
     def filter_pages(pages, now=None):
