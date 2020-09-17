@@ -37,7 +37,7 @@ class ThemeTests(unittest.TestCase):
         self.assertIsInstance(theme.settings, Settings)
         self.assertTrue(hasattr(theme.settings, "id"))
  
-    def test_render_multipages(self):
+    def test_paint_multipages(self):
         text = textwrap.dedent("""
         Page One
         ========
@@ -73,7 +73,7 @@ class ThemeTests(unittest.TestCase):
         self.assertIsInstance(pages[1], Site.Page)
 
         theme = Theme()
-        rv = list(theme.render(pages))
+        rv = list(theme.paint(pages))
         self.assertEqual(pages, rv)
 
 
@@ -124,7 +124,7 @@ class TestPublish(unittest.TestCase):
         self.assertIsInstance(pages[1], Site.Page)
 
         theme = Theme()
-        pages = theme.render(pages)
+        pages = theme.paint(pages)
         settings = theme.get_feed_settings("all")
         feed = theme.publish(pages, **settings)
         self.assertEqual(2, len(feed["items"]))
@@ -161,7 +161,7 @@ class TestPublish(unittest.TestCase):
         self.assertIsInstance(pages[0], Site.Page)
 
         theme = Theme()
-        pages = theme.render(pages)
+        pages = theme.paint(pages)
         settings = theme.get_feed_settings("all")
         feed = theme.publish(pages, **settings)
         self.assertEqual(1, len(feed["items"]))

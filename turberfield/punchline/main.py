@@ -85,7 +85,7 @@ def main(args):
 
         feeds = defaultdict(set)
         with theme as writer:
-            for n, page in enumerate(writer.render(pages)):
+            for n, page in enumerate(writer.paint(pages)):
                 page.path.parent.mkdir(parents=True, exist_ok=True)
                 page.path.write_text(page.html)
                 for feed_name in page.feeds:

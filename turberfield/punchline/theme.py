@@ -81,7 +81,7 @@ class Theme(Renderer):
     def definitions(self):
         return dict()
 
-    def render(self, pages, *args, **kwargs):
+    def paint(self, pages, *args, **kwargs):
         return pages
 
     def publish(self, pages, *, site_url, feed_name, feed_url, feed_title, **kwargs):

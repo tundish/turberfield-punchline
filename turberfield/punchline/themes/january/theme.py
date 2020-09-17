@@ -53,7 +53,7 @@ class January(Theme):
             ]),
         }
 
-    def render_pages(self, pages, *args, **kwargs):
+    def paint_model(self, pages, *args, **kwargs):
         for page in pages:
             presenter = Presenter(page.model)
             for n, frame in enumerate(presenter.frames):
@@ -94,9 +94,9 @@ class January(Theme):
                 feeds=tuple(), tags=tuple(),
             )
 
-    def render(self, pages, *args, **kwargs):
+    def paint(self, pages, *args, **kwargs):
         self.root = self.root or pathlib.Path(*min(i.path.parts for i in pages))
-        pages = list(self.render_pages(pages, *args, **kwargs))
+        pages = list(self.paint_model(pages, *args, **kwargs))
         feeds = {feed_name: self.get_feed_settings(feed_name) for page in pages for feed_name in page.feeds}
         yield from pages
         yield from self.render_with_feeds(pages, feeds, *args, **kwargs)
