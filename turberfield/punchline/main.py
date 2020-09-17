@@ -106,7 +106,12 @@ def main(args):
                 feed_path.parent.mkdir(parents=True, exist_ok=True)
                 feed_path.write_text(json.dumps(feed, indent=0))
 
-            extras = list(writer.cover(pages, feeds, tags))
+            pages = sorted({page for category in feeds.values() for page in category})
+            for n, page in enumerate(writer.cover(pages, feeds, tags)):
+                page.path.parent.mkdir(parents=True, exist_ok=True)
+                page.path.write_text(page.html)
+            logging.info("Wrote {0} cover page{1}.".format(n + 1, "" if not n else "s"))
+
         logging.info("Wrote output to {0}".format(theme.root))
 
     return 0
