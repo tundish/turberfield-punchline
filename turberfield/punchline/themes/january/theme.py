@@ -24,7 +24,6 @@ from turberfield.dialogue.model import Model
 from turberfield.punchline.presenter import Presenter
 from turberfield.punchline.site import Site
 from turberfield.punchline.theme import Theme
-import turberfield.punchline.themes.january.render as render
 
 
 class January(Theme):
@@ -60,15 +59,15 @@ class January(Theme):
             for n, frame in enumerate(presenter.frames):
                 frame = presenter.animate(frame)
                 next_frame = self.frame_path(page, n + 1).relative_to(page.path).as_posix()
-                text = render.frame_to_text(frame)
-                html = render.body_html(
-                    next_=next_frame if n < len(presenter.frames) -1 else None,
+                text = self.render_frame_to_text(frame)
+                html = self.render_body_html(
+                    next_= next_frame if n < len(presenter.frames) -1 else None,
                     refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
                     title=page.title.capitalize(),
                 ).format(
                     "",
-                    render.dict_to_css(vars(self.settings)),
-                    render.frame_to_html(
+                    self.render_dict_to_css(vars(self.settings)),
+                    self.render_frame_to_html(
                         frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
                     )
                 )
@@ -86,10 +85,10 @@ class January(Theme):
                 title=title.capitalize(),
                 model=None,
                 text="",
-                html=render.body_html(title=title).format(
+                html=self.render_body_html(title=title).format(
                     feed_links,
-                    render.dict_to_css(vars(self.settings)),
-                    render.feed_to_html(pages, self.root, self.cfg),
+                    self.render_dict_to_css(vars(self.settings)),
+                    self.render_feed_to_html(pages, self.root, self.cfg),
                 ),
                 path=self.root.joinpath(title).with_suffix(".html"),
                 feeds=tuple(), tags=tuple(),

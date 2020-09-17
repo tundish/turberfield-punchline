@@ -25,6 +25,7 @@ import operator
 import string
 
 from turberfield.dialogue.model import Model
+from turberfield.punchline.render import Renderer
 from turberfield.punchline.site import Site
 from turberfield.punchline.types import Settings
 
@@ -41,7 +42,7 @@ Page = namedtuple(
 )
 
 
-class Theme:
+class Theme(Renderer):
 
     @staticmethod
     def frame_path(page, ordinal):
