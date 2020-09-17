@@ -18,6 +18,7 @@
 
 import argparse
 from collections import defaultdict
+from collections import Counter
 import configparser
 import datetime
 import importlib
@@ -80,21 +81,24 @@ def main(args):
 
         for path in args.inputs:
             output = args.output or path.joinpath("output")
-            pages = [i._replace(path=output.resolve()) for i in Build.filter_pages(Build.find_pages(path, theme))]
+            articles = [
+                i._replace(path=output.resolve()) for i in Build.filter_pages(Build.find_articles(path, theme))
+            ]
             logging.debug(theme.settings)
 
+        tags = Counter([t for a in articles for t in a.tags])
         feeds = defaultdict(set)
         with theme as writer:
-            for n, page in enumerate(writer.paint(pages)):
+            for n, page in enumerate(writer.expand(articles, tags)):
                 page.path.parent.mkdir(parents=True, exist_ok=True)
                 page.path.write_text(page.html)
                 for feed_name in page.feeds:
                     feeds[feed_name].add(page)
-            logging.info("Rendered {0} pages.".format(n))
+            logging.info("Rendered {0} pages.".format(n + 1))
 
             # Write feed output
             for feed_name, pages in feeds.items():
-                settings = writer.get_feed_settings(feed_name)
+                settings = theme.get_feed_settings(feed_name)
                 feed = writer.publish(pages, **settings)
                 feed_path = output.joinpath(
                     settings.getpath("feed_url").relative_to(settings.getpath("feed_url").anchor)
@@ -102,6 +106,7 @@ def main(args):
                 feed_path.parent.mkdir(parents=True, exist_ok=True)
                 feed_path.write_text(json.dumps(feed, indent=0))
 
+            extras = list(writer.cover(pages, feeds, tags))
         logging.info("Wrote output to {0}".format(theme.root))
 
     return 0

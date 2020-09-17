@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with turberfield.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import Counter
 import importlib
 import importlib.resources
 import logging
@@ -21,7 +22,6 @@ import shutil
 import sys
 
 from turberfield.dialogue.model import Model
-from turberfield.punchline.presenter import Presenter
 from turberfield.punchline.site import Site
 from turberfield.punchline.theme import Theme
 
@@ -53,31 +53,12 @@ class January(Theme):
             ]),
         }
 
-    def paint_model(self, pages, *args, **kwargs):
-        for page in pages:
-            presenter = Presenter(page.model)
-            for n, frame in enumerate(presenter.frames):
-                frame = presenter.animate(frame)
-                next_frame = self.frame_path(page, n + 1).relative_to(page.path).as_posix()
-                text = self.render_frame_to_text(frame)
-                html = self.render_body_html(
-                    next_= next_frame if n < len(presenter.frames) -1 else None,
-                    refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
-                    title=page.title.capitalize(),
-                ).format(
-                    "",
-                    self.render_dict_to_css(vars(self.settings)),
-                    self.render_frame_to_html(
-                        frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
-                    )
-                )
-                path = self.frame_path(page, n)
-                yield page._replace(ordinal=n, text=text, html=html, path=path)
-
-    def render_with_feeds(self, pages, feeds: dict, *args, **kwargs):
+    def cover(self, pages, feeds: dict, tags: Counter, *args, **kwargs):
+        self.root = self.root or pathlib.Path(*min(i.path.parts for i in articles))
+        feed_settings = {i: self.get_feed_settings(i) for i in feeds}
         feed_links = "\n".join([
             '<link rel="alternate" type="application/json" title="{0[feed_title]}" href="{0[feed_url]}" />'.format(i)
-            for i in feeds.values()
+            for i in feed_settings.values()
         ])
         for n, title in enumerate(("index",)):
             yield Site.Page(
@@ -93,10 +74,3 @@ class January(Theme):
                 path=self.root.joinpath(title).with_suffix(".html"),
                 feeds=tuple(), tags=tuple(),
             )
-
-    def paint(self, pages, *args, **kwargs):
-        self.root = self.root or pathlib.Path(*min(i.path.parts for i in pages))
-        pages = list(self.paint_model(pages, *args, **kwargs))
-        feeds = {feed_name: self.get_feed_settings(feed_name) for page in pages for feed_name in page.feeds}
-        yield from pages
-        yield from self.render_with_feeds(pages, feeds, *args, **kwargs)

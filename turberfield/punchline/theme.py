@@ -22,9 +22,11 @@ from collections import namedtuple
 import itertools
 import logging
 import operator
+import pathlib
 import string
 
 from turberfield.dialogue.model import Model
+from turberfield.punchline.presenter import Presenter
 from turberfield.punchline.render import Renderer
 from turberfield.punchline.site import Site
 from turberfield.punchline.types import Settings
@@ -81,8 +83,27 @@ class Theme(Renderer):
     def definitions(self):
         return dict()
 
-    def paint(self, pages, *args, **kwargs):
-        return pages
+    def expand(self, articles, *args, **kwargs):
+        self.root = self.root or pathlib.Path(*min(i.path.parts for i in articles))
+        for page in articles:
+            presenter = Presenter(page.model)
+            for n, frame in enumerate(presenter.frames):
+                frame = presenter.animate(frame)
+                next_frame = self.frame_path(page, n + 1).relative_to(page.path).as_posix()
+                text = self.render_frame_to_text(frame)
+                html = self.render_body_html(
+                    next_= next_frame if n < len(presenter.frames) -1 else None,
+                    refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
+                    title=page.title.capitalize(),
+                ).format(
+                    "",
+                    self.render_dict_to_css(vars(self.settings)),
+                    self.render_frame_to_html(
+                        frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
+                    )
+                )
+                path = self.frame_path(page, n)
+                yield page._replace(ordinal=n, text=text, html=html, path=path)
 
     def publish(self, pages, *, site_url, feed_name, feed_url, feed_title, **kwargs):
         rv = {

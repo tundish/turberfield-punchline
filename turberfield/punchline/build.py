@@ -71,8 +71,9 @@ class Build:
 
     @staticmethod
     def build_pages(text, theme, uid=None, path:pathlib.Path=None, name="inline", now=None):
+        path = path or pathlib.Path(".")
         model = Build.build_model(text, theme, uid, path)
-        yield from Build.pages_from_model(model, name, now)
+        yield from Build.pages_from_model(model, name, path, now)
 
     @staticmethod
     def build_model(text, theme, uid=None, path:pathlib.Path=None, model_type=ModelAssignsStrings):
@@ -86,7 +87,7 @@ class Build:
         return model
 
     @staticmethod
-    def pages_from_model(model, name, now=None):
+    def pages_from_model(model, name, path=None, now=None):
         now = now or datetime.datetime.now()
         lc = Build.lifecycle(dict(model.metadata))
         data = Site.multidict(model.metadata)
@@ -94,13 +95,13 @@ class Build:
             yield Site.Page(
                 (lc.view_at or lc.made_at or now, name, n), None,
                 Theme.slug(name), Theme.slug(scene), lc, scene, model,
-                text=None, html=None, path=None,
+                text=None, html=None, path=path,
                 feeds=frozenset(Site.feeds_from_script(model) or ["all"]),
                 tags=frozenset(v.lower() for k, v in model.metadata if k.lower() == "tag")
             )
 
     @staticmethod
-    def find_pages(root: pathlib.Path, theme: Theme):
+    def find_articles(root: pathlib.Path, theme: Theme):
         for parent in {i.parent for i in root.glob("**/*.rst")}:
             uid = Build.write_folder_id(parent)
             for path in parent.glob("*.rst"):
