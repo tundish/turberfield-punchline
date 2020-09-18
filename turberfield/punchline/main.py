@@ -94,7 +94,7 @@ def main(args):
                 page.path.write_text(page.html)
                 for feed_name in page.feeds:
                     feeds[feed_name].add(page)
-            logging.info("Rendered {0} pages.".format(n + 1))
+            logging.info("Rendered {0} page{1}.".format(n + 1, "" if not n else "s"))
 
             # Write feed output
             for feed_name, pages in feeds.items():
@@ -110,7 +110,7 @@ def main(args):
             for n, page in enumerate(writer.cover(pages, feeds, tags)):
                 page.path.parent.mkdir(parents=True, exist_ok=True)
                 page.path.write_text(page.html)
-            logging.info("Wrote {0} cover page{1}.".format(n + 1, "" if not n else "s"))
+            logging.info("Created {0} cover page{1}.".format(n + 1, "" if not n else "s"))
 
         logging.info("Wrote output to {0}".format(theme.root))
 

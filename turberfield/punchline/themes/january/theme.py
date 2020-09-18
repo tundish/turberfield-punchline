@@ -13,16 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with turberfield.  If not, see <http://www.gnu.org/licenses/>.
 
-from collections import Counter
-import importlib
-import importlib.resources
 import logging
-import pathlib
 import shutil
-import sys
 
-from turberfield.dialogue.model import Model
-from turberfield.punchline.site import Site
 from turberfield.punchline.theme import Theme
 
 
@@ -52,25 +45,3 @@ class January(Theme):
                 "Arial", "sans-serif"
             ]),
         }
-
-    def cover(self, pages, feeds: dict, tags: Counter, *args, **kwargs):
-        self.root = self.root or pathlib.Path(*min(i.path.parts for i in articles))
-        feed_settings = {i: self.get_feed_settings(i) for i in feeds}
-        feed_links = "\n".join([
-            '<link rel="alternate" type="application/json" title="{0[feed_title]}" href="{0[feed_url]}" />'.format(i)
-            for i in feed_settings.values()
-        ])
-        for n, title in enumerate(("index",)):
-            yield Site.Page(
-                key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
-                title=title.capitalize(),
-                model=None,
-                text="",
-                html=self.render_body_html(title=title).format(
-                    feed_links,
-                    self.render_dict_to_css(vars(self.settings)),
-                    self.render_feed_to_html(pages, self.root, self.cfg),
-                ),
-                path=self.root.joinpath(title).with_suffix(".html"),
-                feeds=tuple(), tags=tuple(),
-            )
