@@ -80,9 +80,11 @@ def main(args):
             return 1
 
         for path in args.inputs:
+            pages = list(Build.filter_pages(Build.find_articles(path, theme)))
             output = args.output or path.joinpath("output")
+            cover_pages = {page for page in pages if page.path.name in theme.covers.values()}
             articles = [
-                i._replace(path=output.resolve()) for i in Build.filter_pages(Build.find_articles(path, theme))
+                page._replace(path=output.resolve()) for page in pages if page not in cover_pages
             ]
             logging.debug(theme.settings)
 
@@ -107,12 +109,14 @@ def main(args):
                 feed_path.parent.mkdir(parents=True, exist_ok=True)
                 feed_path.write_text(json.dumps(feed, indent=0))
 
-            pages = sorted({page for category in feeds.values() for page in category})
             logging.info("Rendered {0} page{1}.".format(len(pages), "" if len(pages) == 1 else "s"))
-            for n, page in enumerate(writer.cover(pages, feeds, tags)):
-                page.path.parent.mkdir(parents=True, exist_ok=True)
-                page.path.write_text(page.html)
-            logging.info("Created {0} cover page{1}.".format(n + 1, "" if not n else "s"))
+            for cover_page in cover_pages:
+                for page in writer.cover(page, feeds, tags):
+                    page.path.parent.mkdir(parents=True, exist_ok=True)
+                    page.path.write_text(page.html)
+            logging.info("Created {0} cover page{1}.".format(
+                len(cover_pages), "" if len(cover_pages) == 1 else "s")
+            )
 
         logging.info("Wrote output to {0}".format(theme.root))
 

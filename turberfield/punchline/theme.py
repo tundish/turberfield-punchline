@@ -134,6 +134,8 @@ class Theme(Renderer):
         pages = sorted({page for category in feeds.values() for page in category})
         #TODO A deque for each zone on the cover page. They get passed to each Facade in turn
         # Facade decides; section aside main. Class is allocated by name.
+        for page in self.expand(page):
+            print(page)
         for n, (title, file_name) in enumerate(self.covers.items()):
             yield Site.Page(
                 key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
