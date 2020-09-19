@@ -121,8 +121,10 @@ class Build:
             themes = dict(gather_installed("turberfield.interfaces.theme"))
             theme_class = themes.get(name) or themes.get(default)
             logging.info("Selected '{0.__name__}' theme from [ {1} ]".format(theme_class, ",".join(themes.keys())))
+            theme_module = inspect.getmodule(theme_class)
 
-        return theme_class and theme_class(cfg)
+        theme_package = ".".join(theme_module.__name__.split(".")[:-1])
+        return theme_class and theme_class(cfg, theme_package=theme_package)
 
     @staticmethod
     def filter_pages(pages, now=None):

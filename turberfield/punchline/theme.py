@@ -20,10 +20,13 @@
 from collections import Counter
 from collections import defaultdict
 from collections import namedtuple
+import importlib
+import inspect
 import itertools
 import logging
 import operator
 import pathlib
+import shutil
 import string
 
 from turberfield.dialogue.model import Model
@@ -58,9 +61,10 @@ class Theme(Renderer):
         mapping[ord(" ")] = "-"
         return text.translate(mapping).lower()
 
-    def __init__(self, cfg=None, root=None, **kwargs):
+    def __init__(self, cfg=None, root=None, parent_package=None, **kwargs):
         self.cfg = cfg
         self.root = root
+        self.parent_package = parent_package
         theme_section = self.cfg["theme"] if self.cfg and "theme" in self.cfg else {}
         self.settings = Settings(**dict(self.definitions, **theme_section))
 
@@ -68,6 +72,11 @@ class Theme(Renderer):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.parent_package:
+            for d in self.assets:
+                with importlib.resources.path(self.parent_package, d) as path:
+                    shutil.copytree(path, self.root.joinpath(d), dirs_exist_ok=True)
+
         return False
 
     def get_feed_settings(self, feed_name):
@@ -120,7 +129,7 @@ class Theme(Renderer):
         ])
         #TODO A deque for each zone on the cover page. They get passed to each Facade in turn
         # Facade decides; section aside main. Class is allocated by name.
-        for n, title in enumerate(("index",)):
+        for n, (title, file_name) in enumerate(self.covers.items()):
             yield Site.Page(
                 key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
                 title=title.capitalize(),

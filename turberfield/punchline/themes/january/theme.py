@@ -13,21 +13,20 @@
 # You should have received a copy of the GNU General Public License
 # along with turberfield.  If not, see <http://www.gnu.org/licenses/>.
 
-import importlib
 import logging
-import shutil
 
 from turberfield.punchline.theme import Theme
 
 
 class January(Theme):
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        for d in ("css", "fonts"):
-            with importlib.resources.path("turberfield.punchline.themes.january", d) as path:
-                shutil.copytree(path, self.root.joinpath(d), dirs_exist_ok=True)
+    @property
+    def assets(self):
+        return ("css", "fonts")
 
-        return False
+    @property
+    def covers(self):
+        return {i: "{0}.rst".format(i) for i in ("index", "about", "contact")}
 
     @property
     def definitions(self):
