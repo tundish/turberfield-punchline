@@ -128,7 +128,7 @@ class Build:
             theme_module = inspect.getmodule(theme_class)
 
         theme_package = ".".join(theme_module.__name__.split(".")[:-1])
-        return theme_class and theme_class(cfg, theme_package=theme_package)
+        return theme_class and theme_class(cfg, parent_package=theme_package)
 
     @staticmethod
     def filter_pages(pages, now=None):
