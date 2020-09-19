@@ -72,6 +72,10 @@ class Build:
     @staticmethod
     def build_pages(text, theme, uid=None, path:pathlib.Path=None, name="inline", now=None):
         path = path or pathlib.Path(".")
+        if path.name in theme.covers.values():
+            logging.info("Found cover page '{0.name}'".format(path))
+            return
+
         model = Build.build_model(text, theme, uid, path)
         yield from Build.pages_from_model(model, name, path, now)
 

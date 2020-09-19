@@ -94,8 +94,8 @@ def main(args):
                 page.path.write_text(page.html)
                 for feed_name in page.feeds:
                     feeds[feed_name].add(page)
-            logging.info("Rendered {0} page{1}.".format(n + 1, "" if not n else "s"))
 
+            logging.info("Processed {0} article{1}.".format(len(articles), "" if len(articles) == 1 else "s"))
             # Write feed output
             for feed_name, pages in feeds.items():
                 settings = theme.get_feed_settings(feed_name)
@@ -107,6 +107,7 @@ def main(args):
                 feed_path.write_text(json.dumps(feed, indent=0))
 
             pages = sorted({page for category in feeds.values() for page in category})
+            logging.info("Rendered {0} page{1}.".format(len(pages), "" if len(pages) == 1 else "s"))
             for n, page in enumerate(writer.cover(pages, feeds, tags)):
                 page.path.parent.mkdir(parents=True, exist_ok=True)
                 page.path.write_text(page.html)

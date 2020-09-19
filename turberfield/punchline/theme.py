@@ -98,7 +98,9 @@ class Theme(Renderer):
         for page in articles:
             presenter = Presenter(page.model)
             for n, frame in enumerate(presenter.frames):
-                frame = presenter.animate(frame)
+                dwell = 0.3
+                pause = 1
+                frame = presenter.animate(frame, dwell, pause, react=True)
                 next_frame = self.frame_path(page, n + 1).relative_to(page.path).as_posix()
                 text = self.render_frame_to_text(frame)
                 html = self.render_body_html(
