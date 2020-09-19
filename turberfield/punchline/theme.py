@@ -93,42 +93,45 @@ class Theme(Renderer):
     def definitions(self):
         return dict()
 
-    def expand(self, articles, *args, **kwargs):
-        self.root = self.root or pathlib.Path(*min(i.path.parts for i in articles))
-        for page in articles:
-            presenter = Presenter(page.model)
-            for n, frame in enumerate(presenter.frames):
-                dwell = 0.3
-                pause = 1
-                frame = presenter.animate(frame, dwell, pause, react=True)
-                next_frame = self.frame_path(page, n + 1).relative_to(page.path).as_posix()
-                text = self.render_frame_to_text(frame)
-                html = self.render_body_html(
-                    next_= next_frame if n < len(presenter.frames) -1 else None,
-                    refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
-                    title=page.title.capitalize(),
-                ).format(
-                    "",
-                    self.render_dict_to_css(vars(self.settings)),
-                    self.render_frame_to_html(
-                        frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
-                    )
+    def expand(self, page, *args, **kwargs):
+        self.root = pathlib.Path(*min(self.root.parts, page.path.parts)) if self.root else page.path
+        presenter = Presenter(page.model)
+        for n, frame in enumerate(presenter.frames):
+            dwell = 0.3
+            pause = 1
+            frame = presenter.animate(frame, dwell, pause, react=True)
+            next_frame = self.frame_path(page, n + 1).relative_to(page.path).as_posix()
+            text = self.render_frame_to_text(frame)
+            html = self.render_body_html(
+                next_= next_frame if n < len(presenter.frames) -1 else None,
+                refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
+                title=page.title.capitalize(),
+            ).format(
+                "",
+                self.render_dict_to_css(vars(self.settings)),
+                self.render_frame_to_html(
+                    frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
                 )
-                path = self.frame_path(page, n)
-                yield page._replace(ordinal=n, text=text, html=html, path=path)
+            )
+            path = self.frame_path(page, n)
+            yield page._replace(ordinal=n, text=text, html=html, path=path)
 
-    def cover(self, pages, feeds: dict, tags: Counter, *args, **kwargs):
+    @property
+    def covers(self):
+        return {i: "{0}.rst".format(i) for i in ("index", "about", "contact")}
+
+    def cover(self, page, feeds: dict, tags: Counter, *args, **kwargs):
         """
         Nav: tag cloud and article list
         Article: Summary view of article
 
         """
-        self.root = self.root or pathlib.Path(*min(i.path.parts for i in articles))
         feed_settings = {i: self.get_feed_settings(i) for i in feeds}
         feed_links = "\n".join([
             '<link rel="alternate" type="application/json" title="{0[feed_title]}" href="{0[feed_url]}" />'.format(i)
             for i in feed_settings.values()
         ])
+        pages = sorted({page for category in feeds.values() for page in category})
         #TODO A deque for each zone on the cover page. They get passed to each Facade in turn
         # Facade decides; section aside main. Class is allocated by name.
         for n, (title, file_name) in enumerate(self.covers.items()):

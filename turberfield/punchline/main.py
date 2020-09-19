@@ -89,11 +89,12 @@ def main(args):
         tags = Counter([t for a in articles for t in a.tags])
         feeds = defaultdict(set)
         with theme as writer:
-            for n, page in enumerate(writer.expand(articles, tags)):
-                page.path.parent.mkdir(parents=True, exist_ok=True)
-                page.path.write_text(page.html)
-                for feed_name in page.feeds:
-                    feeds[feed_name].add(page)
+            for article in articles:
+                for page in writer.expand(article, tags):
+                    page.path.parent.mkdir(parents=True, exist_ok=True)
+                    page.path.write_text(page.html)
+                    for feed_name in page.feeds:
+                        feeds[feed_name].add(page)
 
             logging.info("Processed {0} article{1}.".format(len(articles), "" if len(articles) == 1 else "s"))
             # Write feed output

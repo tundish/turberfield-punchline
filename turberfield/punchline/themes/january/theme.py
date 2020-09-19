@@ -25,10 +25,6 @@ class January(Theme):
         return ("css", "fonts")
 
     @property
-    def covers(self):
-        return {i: "{0}.rst".format(i) for i in ("index", "about", "contact")}
-
-    @property
     def definitions(self):
         return {
             "titles": '"Bernier Shade", sans-serif',

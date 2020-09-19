@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with turberfield.  If not, see <http://www.gnu.org/licenses/>.
 
+import itertools
 import pathlib
 import textwrap
 import unittest
@@ -73,7 +74,7 @@ class ThemeTests(unittest.TestCase):
         self.assertIsInstance(pages[1], Site.Page)
 
         theme = Theme()
-        rv = list(theme.expand(pages))
+        rv = list(itertools.chain.from_iterable(theme.expand(i) for i in pages))
         self.assertEqual(4, len(rv), rv)
 
 
@@ -124,7 +125,7 @@ class TestPublish(unittest.TestCase):
         self.assertIsInstance(pages[1], Site.Page)
 
         theme = Theme()
-        pages = theme.expand(pages)
+        pages = itertools.chain.from_iterable(theme.expand(i) for i in pages)
         settings = theme.get_feed_settings("all")
         feed = theme.publish(pages, **settings)
         self.assertEqual(2, len(feed["items"]))
@@ -161,7 +162,7 @@ class TestPublish(unittest.TestCase):
         self.assertIsInstance(pages[0], Site.Page)
 
         theme = Theme()
-        pages = theme.expand(pages)
+        pages = itertools.chain.from_iterable(theme.expand(i) for i in pages)
         settings = theme.get_feed_settings("all")
         feed = theme.publish(pages, **settings)
         self.assertEqual(1, len(feed["items"]))
