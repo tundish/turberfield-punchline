@@ -18,7 +18,6 @@
 
 import argparse
 from collections import defaultdict
-from collections import Counter
 import configparser
 import datetime
 import importlib
@@ -88,8 +87,8 @@ def main(args):
             ]
             logging.debug(theme.settings)
 
-        tags = Counter([t for a in articles for t in a.tags])
         feeds = defaultdict(set)
+        tags = defaultdict(set)
         with theme as writer:
             for article in articles:
                 for page in writer.expand(article, tags):
@@ -97,6 +96,8 @@ def main(args):
                     page.path.write_text(page.html)
                     for feed_name in page.feeds:
                         feeds[feed_name].add(page)
+                    for tag_name in page.tags:
+                        tags[tag_name].add(page)
 
             logging.info("Processed {0} article{1}.".format(len(articles), "" if len(articles) == 1 else "s"))
             # Write feed output
@@ -110,8 +111,9 @@ def main(args):
                 feed_path.write_text(json.dumps(feed, indent=0))
 
             logging.info("Rendered {0} page{1}.".format(len(pages), "" if len(pages) == 1 else "s"))
+            facades = {}
             for cover_page in cover_pages:
-                for page in writer.cover(page, feeds, tags):
+                for page in writer.cover(page, feeds, tags, facades):
                     page.path.parent.mkdir(parents=True, exist_ok=True)
                     page.path.write_text(page.html)
             logging.info("Created {0} cover page{1}.".format(

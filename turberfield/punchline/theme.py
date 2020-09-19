@@ -17,7 +17,6 @@
 # along with turberfield.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from collections import Counter
 from collections import defaultdict
 from collections import namedtuple
 import importlib
@@ -107,7 +106,7 @@ class Theme(Renderer):
                 refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
                 title=page.title.capitalize(),
             ).format(
-                "",
+                "", # "\n".join(i.head for i in self.facades)
                 self.render_dict_to_css(vars(self.settings)),
                 self.render_frame_to_html(
                     frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
@@ -120,7 +119,7 @@ class Theme(Renderer):
     def covers(self):
         return {i: "{0}.rst".format(i) for i in ("index", "about", "contact")}
 
-    def cover(self, page, feeds: dict, tags: Counter, *args, **kwargs):
+    def cover(self, page, feeds: dict, tags: dict, facades: dict, *args, **kwargs):
         """
         Nav: tag cloud and article list
         Article: Summary view of article
