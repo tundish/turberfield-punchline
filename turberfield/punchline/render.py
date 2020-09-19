@@ -110,15 +110,15 @@ class Renderer:
     <h1>{ heading }</h1>
     </section>
     <div class="fit-speech">
+    <nav>
+    <ol>
+    { feed_list }
+    </ol>
+    </nav>
     <main>
     <ul>
-    { feed_list }
     </ul>
     </main>
-    <nav>
-    <ul>
-    </ul>
-    </nav>
     </div>"""
 
 

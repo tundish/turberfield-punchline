@@ -107,12 +107,19 @@ class Theme(Renderer):
                 yield page._replace(ordinal=n, text=text, html=html, path=path)
 
     def cover(self, pages, feeds: dict, tags: Counter, *args, **kwargs):
+        """
+        Nav: tag cloud and article list
+        Article: Summary view of article
+
+        """
         self.root = self.root or pathlib.Path(*min(i.path.parts for i in articles))
         feed_settings = {i: self.get_feed_settings(i) for i in feeds}
         feed_links = "\n".join([
             '<link rel="alternate" type="application/json" title="{0[feed_title]}" href="{0[feed_url]}" />'.format(i)
             for i in feed_settings.values()
         ])
+        #TODO A deque for each zone on the cover page. They get passed to each Facade in turn
+        # Facade decides; section aside main. Class is allocated by name.
         for n, title in enumerate(("index",)):
             yield Site.Page(
                 key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
