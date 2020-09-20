@@ -186,4 +186,3 @@ class Theme(Renderer):
             #attachments = [i for i in page.model.shots if isinstance(i, (Model.Audio, Model.Still))]
             rv["items"].append(item)
         return rv
-
