@@ -29,6 +29,7 @@ import shutil
 import string
 
 from turberfield.dialogue.model import Model
+from turberfield.punchline.facade import WebBadge
 from turberfield.punchline.presenter import Presenter
 from turberfield.punchline.render import Renderer
 from turberfield.punchline.site import Site
@@ -92,6 +93,12 @@ class Theme(Renderer):
     def definitions(self):
         return dict()
 
+    @property
+    def facades(self):
+        return [
+            WebBadge(config="turberfield.punchline")
+        ]
+
     def expand(self, page, *args, **kwargs):
         self.root = pathlib.Path(*min(self.root.parts, page.path.parts)) if self.root else page.path
         presenter = Presenter(page.model)
@@ -133,8 +140,6 @@ class Theme(Renderer):
         pages = sorted({page for category in feeds.values() for page in category})
         #TODO A deque for each zone on the cover page. They get passed to each Facade in turn
         # Facade decides; section aside main. Class is allocated by name.
-        for page in self.expand(page):
-            print(page)
         for n, (title, file_name) in enumerate(self.covers.items()):
             yield Site.Page(
                 key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
