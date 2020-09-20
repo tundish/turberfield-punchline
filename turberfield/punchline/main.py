@@ -47,10 +47,6 @@ def parser():
             help="Specify one or more site configurations."
         )
     rv.add_argument(
-        "--theme", type=str, default="january",
-        help="Specify a them to use by name or dotted path to class."
-    )
-    rv.add_argument(
         "inputs", nargs="+", type=pathlib.Path,
         help="Set one or more search paths."
     )
@@ -73,7 +69,7 @@ def main(args):
         # logging.config.fileConfig(cfg, disable_existing_loggers=False)
         logging.info("Using config file at {0}".format(cfg_path))
 
-        theme = Build.find_theme(args.theme, cfg)
+        theme = Build.find_theme(cfg)
         if not theme:
             logging.critical("No theme found.")
             return 1

@@ -107,7 +107,8 @@ class Build:
                 yield from Build.build_pages(path.read_text(), theme, uid=uid, path=path, name=path.stem)
 
     @staticmethod
-    def find_theme(name: str, cfg, default="january"):
+    def find_theme(cfg, default="january"):
+        name = cfg[cfg.default_section].get("theme", default)
         try:
             theme_module = importlib.import_module(name)
             theme_class = next(
