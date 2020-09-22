@@ -39,6 +39,7 @@ setup(
     namespace_packages=["turberfield"],
     packages=[
         "turberfield.punchline",
+        "turberfield.punchline.assets",
         "turberfield.punchline.test",
         "turberfield.punchline.themes.january",
     ],
@@ -46,6 +47,9 @@ setup(
         "turberfield.punchline": [
             "*.cfg",
             "examples/*.rst",
+        ],
+        "turberfield.punchline.assets": [
+            "*.svg",
         ],
         "turberfield.punchline.themes.january": [
             "css/*.css",
