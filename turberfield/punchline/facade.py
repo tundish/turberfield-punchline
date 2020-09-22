@@ -31,6 +31,10 @@ class Facade:
     def __call__(self, **kwargs):
         return self.Fragment(None, None, None, None)
 
+    @property
+    def assets(self):
+        return ("img",)
+
 class WebBadge(Facade):
     pass
 
