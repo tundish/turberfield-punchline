@@ -36,13 +36,11 @@ class Facade:
         return self.Fragment(None, None, None, None)
 
     @classmethod
-    def register(cls, f):
-        cls.catalogue.add(f)
+    def register(cls, *args):
+        for f in args:
+            if isinstance(f, cls):
+                cls.catalogue.add(f)
         return cls.catalogue.copy()
-
-    @property
-    def assets(self):
-        return ("img",)
 
 
 class WebBadge(Facade):

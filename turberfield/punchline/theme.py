@@ -52,10 +52,6 @@ Page = namedtuple(
 
 class Theme(Renderer):
 
-    @classmethod
-    def declare_facades(cls, parent_package):
-        yield Facade(parent_package, "css", "fonts", config="turberfield.punchline")
-
     @staticmethod
     def frame_path(page, ordinal):
         return page.path.joinpath(page.script_slug, page.scene_slug, f"{ordinal:03d}").with_suffix(".html")
@@ -80,11 +76,11 @@ class Theme(Renderer):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if self.parent_package:
-            for d in self.assets:
-                with importlib.resources.path(self.parent_package, d) as path:
-                    shutil.copytree(path, self.root.joinpath(d), dirs_exist_ok=True)
-
+        for f in self.facades:
+            if f.config in self.cfg:
+                for resource in f.resources:
+                    with importlib.resources.path(f.package, resource) as path:
+                        shutil.copytree(path, self.root.joinpath(resource), dirs_exist_ok=True)
         return False
 
     def get_feed_settings(self, feed_name):

@@ -15,14 +15,17 @@
 
 import logging
 
+from turberfield.punchline.facade import Facade
 from turberfield.punchline.theme import Theme
 
 
 class January(Theme):
 
     @property
-    def assets(self):
-        return ("css", "fonts")
+    def facades(self):
+        return Facade.register(
+            Facade(self.parent_package, "css", "fonts"),
+        )
 
     @property
     def definitions(self):
