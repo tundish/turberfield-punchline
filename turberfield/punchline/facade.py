@@ -25,16 +25,25 @@ class Facade:
 
     Fragment = namedtuple("Fragment", ["metadata", "style", "body", "text"])
 
-    def __init__(self, config="theme"):
+    catalogue = set()
+
+    def __init__(self, package, *resources, config="theme"):
+        self.package = package
+        self.resources = resources
         self.config = config
 
     def __call__(self, **kwargs):
         return self.Fragment(None, None, None, None)
 
+    @classmethod
+    def register(cls, f):
+        cls.catalogue.add(f)
+        return cls.catalogue.copy()
+
     @property
     def assets(self):
         return ("img",)
 
+
 class WebBadge(Facade):
     pass
-

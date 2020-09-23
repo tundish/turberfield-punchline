@@ -23,6 +23,7 @@ from collections import defaultdict
 from collections import namedtuple
 
 from turberfield.punchline.facade import Facade
+from turberfield.punchline.types import Settings
 
 
 class FacadeTests(unittest.TestCase):
@@ -40,7 +41,14 @@ class FacadeTests(unittest.TestCase):
         gravity = hsl(36, 20%, 18%, 1.0)
         """
         )
-        facade = Facade()
-        kwargs = self.cfg[facade.label] if facade.label in self.cfg else {}
+
+    def test_register(self):
+        f = Facade("turberfield.punchline")
+        facades = Facade.register(f)
+        self.assertIn(f, facades)
+
+    def test_register(self):
+        facade = Facade("turberfield.punchline")
+        kwargs = self.cfg[facade.config] if facade.config in self.cfg else {}
         rv = facade(**kwargs)
         self.assertIsInstance(rv, Facade.Fragment)

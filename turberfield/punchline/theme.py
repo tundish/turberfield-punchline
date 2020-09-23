@@ -20,6 +20,7 @@
 from collections import defaultdict
 from collections import namedtuple
 import importlib
+import importlib.resources
 import inspect
 import itertools
 import logging
@@ -29,6 +30,7 @@ import shutil
 import string
 
 from turberfield.dialogue.model import Model
+from turberfield.punchline.facade import Facade
 from turberfield.punchline.facade import WebBadge
 from turberfield.punchline.presenter import Presenter
 from turberfield.punchline.render import Renderer
@@ -50,6 +52,10 @@ Page = namedtuple(
 
 class Theme(Renderer):
 
+    @classmethod
+    def declare_facades(cls, parent_package):
+        yield Facade(parent_package, "css", "fonts", config="turberfield.punchline")
+
     @staticmethod
     def frame_path(page, ordinal):
         return page.path.joinpath(page.script_slug, page.scene_slug, f"{ordinal:03d}").with_suffix(".html")
@@ -67,6 +73,8 @@ class Theme(Renderer):
         self.parent_package = parent_package
         theme_section = self.cfg["theme"] if self.cfg and "theme" in self.cfg else {}
         self.settings = Settings(**dict(self.definitions, **theme_section))
+        Facade.register(WebBadge("turberfield.punchline", "assets", config="turberfield.punchline"))
+
 
     def __enter__(self):
         return self
@@ -92,12 +100,6 @@ class Theme(Renderer):
     @property
     def definitions(self):
         return dict()
-
-    @property
-    def facades(self):
-        return [
-            WebBadge(config="turberfield.punchline")
-        ]
 
     def expand(self, page, *args, **kwargs):
         self.root = pathlib.Path(*min(self.root.parts, page.path.parts)) if self.root else page.path

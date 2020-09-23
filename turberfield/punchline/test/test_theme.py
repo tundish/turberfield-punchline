@@ -166,4 +166,3 @@ class TestPublish(unittest.TestCase):
         settings = theme.get_feed_settings("all")
         feed = theme.publish(pages, **settings)
         self.assertEqual(1, len(feed["items"]))
-
