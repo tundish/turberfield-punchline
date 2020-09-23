@@ -67,7 +67,10 @@ class Theme(Renderer):
         self.cfg = cfg
         self.root = root
         self.parent_package = parent_package
-        theme_section = self.cfg["theme"] if self.cfg and "theme" in self.cfg else {}
+        theme_section = (
+            {k: v for k, v in self.cfg["theme"].items() if k not in self.cfg[self.cfg.default_section]}
+            if self.cfg and "theme" in self.cfg else {}
+        )
         self.settings = Settings(**dict(self.definitions, **theme_section))
         Widget.register(WebBadge("turberfield.punchline", "assets", config="turberfield.punchline"))
 
