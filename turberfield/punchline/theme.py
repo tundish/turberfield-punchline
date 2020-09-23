@@ -30,12 +30,12 @@ import shutil
 import string
 
 from turberfield.dialogue.model import Model
-from turberfield.punchline.facade import Facade
-from turberfield.punchline.facade import WebBadge
 from turberfield.punchline.presenter import Presenter
 from turberfield.punchline.render import Renderer
 from turberfield.punchline.site import Site
 from turberfield.punchline.types import Settings
+from turberfield.punchline.widget import Widget
+from turberfield.punchline.widget import WebBadge
 
 
 Lifecycle = namedtuple("Lifecycle", ["made_at", "view_at", "edit_at", "drop_at"])
@@ -69,17 +69,17 @@ class Theme(Renderer):
         self.parent_package = parent_package
         theme_section = self.cfg["theme"] if self.cfg and "theme" in self.cfg else {}
         self.settings = Settings(**dict(self.definitions, **theme_section))
-        Facade.register(WebBadge("turberfield.punchline", "assets", config="turberfield.punchline"))
+        Widget.register(WebBadge("turberfield.punchline", "assets", config="turberfield.punchline"))
 
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        for f in self.facades:
-            if f.config in self.cfg:
-                for resource in f.resources:
-                    with importlib.resources.path(f.package, resource) as path:
+        for w in self.widgets:
+            if w.config in self.cfg:
+                for resource in w.resources:
+                    with importlib.resources.path(w.package, resource) as path:
                         shutil.copytree(path, self.root.joinpath(resource), dirs_exist_ok=True)
         return False
 
@@ -96,6 +96,10 @@ class Theme(Renderer):
     @property
     def definitions(self):
         return dict()
+
+    @property
+    def widgets(self):
+        return Widget.catalogue.copy()
 
     def expand(self, page, *args, **kwargs):
         self.root = pathlib.Path(*min(self.root.parts, page.path.parts)) if self.root else page.path

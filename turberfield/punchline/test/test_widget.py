@@ -22,11 +22,11 @@ import unittest
 from collections import defaultdict
 from collections import namedtuple
 
-from turberfield.punchline.facade import Facade
 from turberfield.punchline.types import Settings
+from turberfield.punchline.widget import Widget
 
 
-class FacadeTests(unittest.TestCase):
+class WidgetTests(unittest.TestCase):
 
     def setUp(self):
         self.cfg = Settings.config_parser()
@@ -43,12 +43,12 @@ class FacadeTests(unittest.TestCase):
         )
 
     def test_register(self):
-        f = Facade("turberfield.punchline")
-        facades = Facade.register(f)
-        self.assertIn(f, facades)
+        f = Widget("turberfield.punchline")
+        widgets = Widget.register(f)
+        self.assertIn(f, widgets)
 
     def test_register(self):
-        facade = Facade("turberfield.punchline")
-        kwargs = self.cfg[facade.config] if facade.config in self.cfg else {}
-        rv = facade(**kwargs)
-        self.assertIsInstance(rv, Facade.Fragment)
+        widgets = Widget("turberfield.punchline")
+        kwargs = self.cfg[widgets.config] if widgets.config in self.cfg else {}
+        rv = widgets(**kwargs)
+        self.assertIsInstance(rv, Widget.Fragment)

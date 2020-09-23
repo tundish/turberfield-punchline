@@ -21,7 +21,7 @@ from collections import defaultdict
 from collections import namedtuple
 
 
-class Facade:
+class Widget:
 
     Fragment = namedtuple("Fragment", ["metadata", "style", "body", "text"])
 
@@ -43,5 +43,5 @@ class Facade:
         return cls.catalogue.copy()
 
 
-class WebBadge(Facade):
+class WebBadge(Widget):
     pass
