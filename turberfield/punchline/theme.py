@@ -74,7 +74,6 @@ class Theme(Renderer):
         self.settings = Settings(**dict(self.definitions, **theme_section))
         Widget.register(WebBadge("turberfield.punchline", "assets", config="turberfield.punchline"))
 
-
     def __enter__(self):
         return self
 
@@ -102,14 +101,19 @@ class Theme(Renderer):
 
     @property
     def widgets(self):
+        section_ordering = {s: n for n, s in enumerate(self.cfg.sections())}
+        print(section_ordering)
         return Widget.catalogue.copy()
 
     def expand(self, page, *args, **kwargs):
+        # TODO: pass in widgets at this point for cover pages.
+        # Cover handler methods?
         self.root = pathlib.Path(*min(self.root.parts, page.path.parts)) if self.root else page.path
         presenter = Presenter(page.model)
+        metadata = Site.multidict(page.model.metadata)
+        dwell = float(next(reversed(metadata["dwell"]), "0.3"))
+        pause = float(next(reversed(metadata["pause"]), "1.0"))
         for n, frame in enumerate(presenter.frames):
-            dwell = 0.3
-            pause = 1
             frame = presenter.animate(frame, dwell, pause, react=True)
             next_frame = self.frame_path(page, n + 1).relative_to(page.path).as_posix()
             text = self.render_frame_to_text(frame)

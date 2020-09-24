@@ -6,6 +6,16 @@
 Change Log
 ::::::::::
 
+0.4.0
+=====
+
+Extensive refactoring of the Theme class and public API.
+
+* Created a Widget parent class to manage optional content.
+* `dwell` and `pause` can be set from dialogue metadata.
+* Removed the `--theme` option. It is now set in the default section
+  of the config file.
+
 0.3.0
 =====
 

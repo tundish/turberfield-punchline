@@ -31,6 +31,14 @@ class ThemeTests(unittest.TestCase):
         rv = Theme.slug(text)
         self.assertEqual("abab234-_-", rv)
 
+    def test_widgets(self):
+        cfg = Settings.config_parser()
+        theme = Theme(cfg)
+        self.assertFalse(theme.widgets)
+
+        cfg.add_section("turberfield.punchline")
+        self.assertTrue(theme.widgets)
+
     def test_settings(self):
         cfg = Settings.config_parser()
         theme = Theme(cfg)

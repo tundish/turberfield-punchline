@@ -46,7 +46,7 @@ class Site:
             list, {
                 k: [i[1] for i in g]
                 for k, g in itertools.groupby(
-                    items, key=operator.itemgetter(0)
+                    sorted(items), key=operator.itemgetter(0)
                 )
             }
         )
