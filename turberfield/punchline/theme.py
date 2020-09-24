@@ -102,7 +102,6 @@ class Theme(Renderer):
     @property
     def widgets(self):
         section_ordering = {s: n for n, s in enumerate(self.cfg.sections())}
-        print(section_ordering)
         return Widget.catalogue.copy()
 
     def expand(self, page, *args, **kwargs):

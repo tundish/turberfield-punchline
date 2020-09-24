@@ -22,9 +22,16 @@ from turberfield.punchline.build import Build
 from turberfield.punchline.site import Site
 from turberfield.punchline.theme import Theme
 from turberfield.punchline.types import Settings
+from turberfield.punchline.widget import Widget
 
 
-class ThemeTests(unittest.TestCase):
+class CleanCatalogue:
+
+    def tearDown(self):
+        Widget.catalogue.clear()
+
+
+class ThemeTests(CleanCatalogue, unittest.TestCase):
 
     def test_slug(self):
         text = "ABab234$%^&*-_ "
