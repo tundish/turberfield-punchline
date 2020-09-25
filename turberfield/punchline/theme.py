@@ -53,7 +53,7 @@ Page = namedtuple(
 class Theme(Renderer):
 
     @staticmethod
-    def frame_path(page, ordinal):
+    def frame_path(location, page, ordinal):
         return page.path.joinpath(page.script_slug, page.scene_slug, f"{ordinal:03d}").with_suffix(".html")
 
     @staticmethod
@@ -106,17 +106,17 @@ class Theme(Renderer):
             [(section_ordering[w.config], w) for w in Widget.catalogue if w.config in self.cfg]
         )]
 
-    def expand(self, page, *args, **kwargs):
+    def expand(self, page, *args, output, **kwargs):
         # TODO: pass in widgets at this point for cover pages.
         # Cover handler methods?
-        self.root = pathlib.Path(*min(self.root.parts, page.path.parts)) if self.root else page.path
+        self.root = pathlib.Path(*min(self.root.parts, page.path.parent.parts)) if self.root else page.path.parent
         presenter = Presenter(page.model)
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
         for n, frame in enumerate(presenter.frames):
             frame = presenter.animate(frame, dwell, pause, react=True)
-            next_frame = self.frame_path(page, n + 1).relative_to(page.path).as_posix()
+            next_frame = self.frame_path(output, page, n + 1).relative_to(output).as_posix()
             text = self.render_frame_to_text(frame)
             html = self.render_body_html(
                 next_= next_frame if n < len(presenter.frames) -1 else None,
@@ -129,7 +129,7 @@ class Theme(Renderer):
                     frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
                 )
             )
-            path = self.frame_path(page, n)
+            path = self.frame_path(output, page, n)
             yield page._replace(ordinal=n, text=text, html=html, path=path)
 
     @property
@@ -144,7 +144,7 @@ class Theme(Renderer):
             "contact.rst": self.cover,
         }
 
-    def cover(self, page, feeds: dict, tags: dict, *args, **kwargs):
+    def cover(self, page, feeds: dict, tags: dict, *args, output, **kwargs):
         """
         Nav: tag cloud and article list
         Article: Summary view of article
@@ -173,7 +173,7 @@ class Theme(Renderer):
                 feeds=tuple(), tags=tuple(),
             )
 
-    def publish(self, pages, *, site_url, feed_name, feed_url, feed_title, **kwargs):
+    def publish(self, output, pages, *, site_url, feed_name, feed_url, feed_title, **kwargs):
         rv = {
             "version": "https://jsonfeed.org/version/1.1",
             "title": feed_title,

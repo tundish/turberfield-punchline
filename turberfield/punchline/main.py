@@ -74,21 +74,15 @@ def main(args):
             return 1
 
         for path in args.inputs:
-            pages = list(Build.filter_pages(Build.find_articles(path, theme), theme))
+            articles = list(Build.filter_pages(Build.find_articles(path, theme), theme))
             output = args.output or path.joinpath("output")
-            #cover_pages = {page for page in pages if page.path.name in theme.covers.values()}
-            #articles = [
-            #    page._replace(path=output.resolve()) for page in pages if page not in cover_pages
-            #]
-            articles = [page for page in pages]
-            logging.debug(theme.settings)
 
         feeds = {f: set() for p in articles for f in p.feeds}
         tags = {t: set() for p in articles for t in p.tags}
         with theme as writer:
             for article in articles:
                 handler = writer.handlers.get(article.path.name, writer.expand)
-                for page in handler(article._replace(path=output.resolve()), feeds, tags):
+                for page in handler(article._replace(path=output.resolve()), feeds, tags, output=output.resolve()):
                     page.path.parent.mkdir(parents=True, exist_ok=True)
                     page.path.write_text(page.html)
                     for feed_name in page.feeds:
@@ -100,7 +94,7 @@ def main(args):
             # Write feed output
             for feed_name, pages in feeds.items():
                 settings = theme.get_feed_settings(feed_name)
-                feed = writer.publish(pages, **settings)
+                feed = writer.publish(output, pages, **settings)
                 feed_path = output.joinpath(
                     settings.getpath("feed_url").relative_to(settings.getpath("feed_url").anchor)
                 )
