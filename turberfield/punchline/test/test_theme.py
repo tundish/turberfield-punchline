@@ -107,7 +107,7 @@ class ThemeTests(CleanCatalogue, unittest.TestCase):
         self.assertIsInstance(pages[1], Site.Page)
 
         theme = Theme()
-        rv = list(itertools.chain.from_iterable(theme.expand(i) for i in pages))
+        rv = list(itertools.chain.from_iterable(theme.expand(i, output=pathlib.Path(".")) for i in pages))
         self.assertEqual(4, len(rv), rv)
 
 
@@ -119,7 +119,7 @@ class TestPublish(unittest.TestCase):
         self.assertIn("feed_url", settings)
         self.assertIn("feed_title", settings)
 
-        rv = theme.publish([], **settings)
+        rv = theme.publish(None, [], **settings)
         self.assertEqual("https://jsonfeed.org/version/1.1", rv.get("version"))
 
     def test_publish_multipages(self):
@@ -158,9 +158,9 @@ class TestPublish(unittest.TestCase):
         self.assertIsInstance(pages[1], Site.Page)
 
         theme = Theme()
-        pages = itertools.chain.from_iterable(theme.expand(i) for i in pages)
+        pages = itertools.chain.from_iterable(theme.expand(i, output=pathlib.Path(".")) for i in pages)
         settings = theme.get_feed_settings("all")
-        feed = theme.publish(pages, **settings)
+        feed = theme.publish(None, pages, **settings)
         self.assertEqual(2, len(feed["items"]))
 
     def test_publish_multishots(self):
@@ -195,7 +195,7 @@ class TestPublish(unittest.TestCase):
         self.assertIsInstance(pages[0], Site.Page)
 
         theme = Theme()
-        pages = itertools.chain.from_iterable(theme.expand(i) for i in pages)
+        pages = itertools.chain.from_iterable(theme.expand(i, output=pathlib.Path(".")) for i in pages)
         settings = theme.get_feed_settings("all")
-        feed = theme.publish(pages, **settings)
+        feed = theme.publish(None, pages, **settings)
         self.assertEqual(1, len(feed["items"]))
