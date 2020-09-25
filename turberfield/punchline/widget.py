@@ -44,4 +44,7 @@ class Widget:
 
 
 class WebBadge(Widget):
-    pass
+
+    def __call__(self, **kwargs):
+        html = "<strong>Hello World!</strong>"
+        return self.Fragment(None, None, html, None)
