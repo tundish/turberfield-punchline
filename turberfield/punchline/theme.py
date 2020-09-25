@@ -114,8 +114,6 @@ class Theme(Renderer):
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
-        for widget in self.widgets:
-            print(widget())
         for n, frame in enumerate(presenter.frames):
             frame = presenter.animate(frame, dwell, pause, react=True)
             next_frame = self.frame_path(page, n + 1).relative_to(page.path).as_posix()
@@ -138,19 +136,21 @@ class Theme(Renderer):
     def covers(self):
         return {i: "{0}.rst".format(i) for i in ("index", "about", "contact")}
 
+    @property
     def handlers(self):
         return {
-            "index.rst": self.handler,
-            "about.rst": self.handler,
-            "contact.rst": self.handler,
+            "index.rst": self.cover,
+            "about.rst": self.cover,
+            "contact.rst": self.cover,
         }
 
-    def cover(self, page, feeds: dict, tags: dict, facades: dict, *args, **kwargs):
+    def cover(self, page, feeds: dict, tags: dict, *args, **kwargs):
         """
         Nav: tag cloud and article list
         Article: Summary view of article
 
         """
+        logging.info("Handling {0}".format(page))
         feed_settings = {i: self.get_feed_settings(i) for i in feeds}
         # Feed links is a widget?
         feed_links = "\n".join([

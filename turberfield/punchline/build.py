@@ -127,12 +127,17 @@ class Build:
         return theme_class and theme_class(cfg, parent_package=theme_package)
 
     @staticmethod
-    def filter_pages(pages, now=None):
+    def filter_pages(pages, theme: Theme, now=None):
         now = now or datetime.datetime.now()
+        handled = []
         for page in sorted(pages, key=operator.attrgetter("key")):
             if not page.lifecycle.view_at or page.lifecycle.view_at <= now:
                 if not page.lifecycle.drop_at or page.lifecycle.drop_at > now:
-                    yield page
+                    if page.path.name in theme.handlers:
+                        handled.append(page)
+                    else:
+                        yield page
+        yield from handled
 
     @staticmethod
     def feeds_from_pages(pages, default=None, keys=("category", "feed")):
