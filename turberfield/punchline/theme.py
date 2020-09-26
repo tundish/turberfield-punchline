@@ -109,7 +109,6 @@ class Theme(Renderer):
     def expand(self, page, *args, **kwargs):
         # TODO: pass in widgets at this point for cover pages.
         # Cover handler methods?
-        #self.root = pathlib.Path(*min(self.root.parts, page.path.parent.parts)) if self.root else page.path.parent
         presenter = Presenter(page.model)
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
@@ -158,7 +157,6 @@ class Theme(Renderer):
             for i in feed_settings.values()
         ])
         pages = sorted({page for category in feeds.values() for page in category})
-        root = pathlib.Path(*min(p.path.parent.parts for p in pages))
         for n, (title, file_name) in enumerate(self.covers.items()):
             yield Site.Page(
                 key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
@@ -168,7 +166,7 @@ class Theme(Renderer):
                 html=self.render_body_html(title=title).format(
                     feed_links,
                     self.render_dict_to_css(vars(self.settings)),
-                    self.render_feed_to_html(pages, root, self.cfg),
+                    self.render_feed_to_html(pages, self.output, self.cfg),
                 ),
                 path=self.output.joinpath(title).with_suffix(".html"),
                 feeds=tuple(), tags=tuple(),

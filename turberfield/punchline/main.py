@@ -17,6 +17,7 @@
 # along with turberfield.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
+from collections import Counter
 import configparser
 import datetime
 import importlib
@@ -79,6 +80,7 @@ def main(args):
 
         feeds = {f: set() for p in articles for f in p.feeds}
         tags = {t: set() for p in articles for t in p.tags}
+        tally = Counter()
         with theme as writer:
             for article in articles:
                 handler = writer.handlers.get(article.path.name, writer.expand)
@@ -89,10 +91,19 @@ def main(args):
                         feeds[feed_name].add(page)
                     for tag_name in page.tags:
                         tags[tag_name].add(page)
+                tally[handler] += 1
 
-            logging.info("Processed {0} article{1}.".format(len(articles), "" if len(articles) == 1 else "s"))
+            n_articles = tally[theme.expand]
+            logging.info("Processed {0} article{1}.".format(n_articles, "" if n_articles == 1 else "s"))
+
+            n_pages = len({page for pages in feeds.values() for page in pages})
+            logging.info("Rendered {0} page{1}.".format(n_pages, "" if n_pages == 1 else "s"))
+
+            n_covers = sum(tally.values()) - n_articles
+            logging.info("Created {0} cover page{1}.".format(n_covers, "" if n_covers == 1 else "s"))
+
             # Write feed output
-            for feed_name, pages in feeds.items():
+            for n, (feed_name, pages) in enumerate(feeds.items()):
                 settings = theme.get_feed_settings(feed_name)
                 feed = writer.publish(pages, **settings)
                 feed_path = theme.output.joinpath(
@@ -101,15 +112,7 @@ def main(args):
                 feed_path.parent.mkdir(parents=True, exist_ok=True)
                 feed_path.write_text(json.dumps(feed, indent=0))
 
-            logging.info("Rendered {0} page{1}.".format(len(pages), "" if len(pages) == 1 else "s"))
-            #facades = {}
-            #for cover_page in cover_pages:
-            #    for page in writer.cover(page, feeds, tags, facades):
-            #        page.path.parent.mkdir(parents=True, exist_ok=True)
-            #        page.path.write_text(page.html)
-            #logging.info("Created {0} cover page{1}.".format(
-            #    len(cover_pages), "" if len(cover_pages) == 1 else "s")
-            #)
+            logging.info("Compiled {0} feed{1}.".format(n + 1, "" if not n else "s"))
 
         logging.info("Wrote output to {0}".format(theme.output))
 

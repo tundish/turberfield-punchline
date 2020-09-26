@@ -45,6 +45,7 @@ class ModelAssignsStrings(Model):
         val = re.compile("\|(\w+)\|").sub(self.substitute_property, node["arguments"][1])
         self.shots[-1].items.append(Model.Property(self.speaker, entity.persona, attr, val))
 
+
 class Build:
 
     @staticmethod

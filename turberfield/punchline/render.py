@@ -17,6 +17,7 @@ import functools
 
 from turberfield.dialogue.model import Model
 
+
 class Renderer:
 
     @staticmethod
