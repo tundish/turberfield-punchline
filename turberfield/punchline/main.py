@@ -84,7 +84,7 @@ def main(args):
         with theme as writer:
             for article in articles:
                 handler = writer.handlers.get(article.path.name, writer.expand)
-                for page in handler(article._replace(path=output.resolve()), feeds, tags, output=output.resolve()):
+                for page in handler(article, feeds, tags, output=output.resolve()):
                     page.path.parent.mkdir(parents=True, exist_ok=True)
                     page.path.write_text(page.html)
                     for feed_name in page.feeds:

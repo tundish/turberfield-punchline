@@ -70,12 +70,6 @@ class Build:
             return rv
 
     @staticmethod
-    def build_pages(text, theme, uid=None, path:pathlib.Path=None, name="inline", now=None):
-        path = path or pathlib.Path(".")
-        model = Build.build_model(text, theme, uid, path)
-        yield from Build.pages_from_model(model, name, path, now)
-
-    @staticmethod
     def build_model(text, theme, uid=None, path:pathlib.Path=None, model_type=ModelAssignsStrings):
         theme.settings.id = uid or theme.settings.id
         path = path or pathlib.Path(".")
@@ -99,6 +93,12 @@ class Build:
                 feeds=frozenset(Site.feeds_from_script(model) or ["all"]),
                 tags=frozenset(v.lower() for k, v in model.metadata if k.lower() == "tag")
             )
+
+    @staticmethod
+    def build_pages(text, theme, uid=None, path:pathlib.Path=None, name="inline", now=None):
+        path = path or pathlib.Path(".")
+        model = Build.build_model(text, theme, uid, path)
+        yield from Build.pages_from_model(model, name, path, now)
 
     @staticmethod
     def find_articles(root: pathlib.Path, theme: Theme):
@@ -139,14 +139,3 @@ class Build:
                     else:
                         yield page
         yield from handled
-
-    @staticmethod
-    def feeds_from_pages(pages, default=None, keys=("category", "feed")):
-        rv = defaultdict(set)
-        for page in pages:
-            if default:
-                rv[default].add(page)
-            for k, v in page.model.metadata:
-                if k.lower() in keys:
-                    rv[v.lower()].add(page)
-        return rv

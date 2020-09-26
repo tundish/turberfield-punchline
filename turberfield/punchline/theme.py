@@ -54,7 +54,7 @@ class Theme(Renderer):
 
     @staticmethod
     def frame_path(location, page, ordinal):
-        return page.path.joinpath(page.script_slug, page.scene_slug, f"{ordinal:03d}").with_suffix(".html")
+        return location.joinpath(page.script_slug, page.scene_slug, f"{ordinal:03d}").with_suffix(".html")
 
     @staticmethod
     def slug(text, table="".maketrans({i: i for i in string.ascii_letters + string.digits + "_-"})):
