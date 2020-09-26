@@ -63,9 +63,9 @@ class Theme(Renderer):
         mapping[ord(" ")] = "-"
         return text.translate(mapping).lower()
 
-    def __init__(self, cfg=None, root=None, parent_package=None, **kwargs):
+    def __init__(self, cfg=None, output=None, parent_package=None, **kwargs):
         self.cfg = cfg
-        self.root = root
+        self.output = output or pathlib.Path(".")
         self.parent_package = parent_package
         theme_section = (
             {k: v for k, v in self.cfg["theme"].items() if k not in self.cfg[self.cfg.default_section]}
@@ -82,7 +82,7 @@ class Theme(Renderer):
             if w.config in self.cfg:
                 for resource in w.resources:
                     with importlib.resources.path(w.package, resource) as path:
-                        shutil.copytree(path, self.root.joinpath(resource), dirs_exist_ok=True)
+                        shutil.copytree(path, self.output.joinpath(resource), dirs_exist_ok=True)
         return False
 
     def get_feed_settings(self, feed_name):
@@ -106,17 +106,17 @@ class Theme(Renderer):
             [(section_ordering[w.config], w) for w in Widget.catalogue if w.config in self.cfg]
         )]
 
-    def expand(self, page, *args, output, **kwargs):
+    def expand(self, page, *args, **kwargs):
         # TODO: pass in widgets at this point for cover pages.
         # Cover handler methods?
-        self.root = pathlib.Path(*min(self.root.parts, page.path.parent.parts)) if self.root else page.path.parent
+        #self.root = pathlib.Path(*min(self.root.parts, page.path.parent.parts)) if self.root else page.path.parent
         presenter = Presenter(page.model)
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
         for n, frame in enumerate(presenter.frames):
             frame = presenter.animate(frame, dwell, pause, react=True)
-            next_frame = self.frame_path(output, page, n + 1).relative_to(output).as_posix()
+            next_frame = self.frame_path(self.output, page, n + 1).relative_to(self.output).as_posix()
             text = self.render_frame_to_text(frame)
             html = self.render_body_html(
                 next_= next_frame if n < len(presenter.frames) -1 else None,
@@ -129,7 +129,7 @@ class Theme(Renderer):
                     frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
                 )
             )
-            path = self.frame_path(output, page, n)
+            path = self.frame_path(self.output, page, n)
             yield page._replace(ordinal=n, text=text, html=html, path=path)
 
     @property
@@ -144,7 +144,7 @@ class Theme(Renderer):
             "contact.rst": self.cover,
         }
 
-    def cover(self, page, feeds: dict, tags: dict, *args, output, **kwargs):
+    def cover(self, page, feeds: dict, tags: dict, *args, **kwargs):
         """
         Nav: tag cloud and article list
         Article: Summary view of article
@@ -158,6 +158,7 @@ class Theme(Renderer):
             for i in feed_settings.values()
         ])
         pages = sorted({page for category in feeds.values() for page in category})
+        root = pathlib.Path(*min(p.path.parent.parts for p in pages))
         for n, (title, file_name) in enumerate(self.covers.items()):
             yield Site.Page(
                 key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
@@ -167,13 +168,13 @@ class Theme(Renderer):
                 html=self.render_body_html(title=title).format(
                     feed_links,
                     self.render_dict_to_css(vars(self.settings)),
-                    self.render_feed_to_html(pages, self.root, self.cfg),
+                    self.render_feed_to_html(pages, root, self.cfg),
                 ),
-                path=output.joinpath(title).with_suffix(".html"),
+                path=self.output.joinpath(title).with_suffix(".html"),
                 feeds=tuple(), tags=tuple(),
             )
 
-    def publish(self, output, pages, *, site_url, feed_name, feed_url, feed_title, **kwargs):
+    def publish(self, pages, *, site_url, feed_name, feed_url, feed_title, **kwargs):
         rv = {
             "version": "https://jsonfeed.org/version/1.1",
             "title": feed_title,
@@ -189,7 +190,7 @@ class Theme(Renderer):
         for _, series in sorted(items.items()):
             page = series[0]
             metadata = Site.multidict(page.model.metadata)
-            page_path = page.path.relative_to(output).as_posix() if self.root else page.path
+            page_path = page.path.relative_to(self.output).as_posix() if self.output else page.path
             item = {
                 "id": f"{site_url}{page_path}",
                 "url": f"{site_url}{page_path}",

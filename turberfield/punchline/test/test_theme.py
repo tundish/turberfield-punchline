@@ -119,7 +119,7 @@ class TestPublish(unittest.TestCase):
         self.assertIn("feed_url", settings)
         self.assertIn("feed_title", settings)
 
-        rv = theme.publish(None, [], **settings)
+        rv = theme.publish([], **settings)
         self.assertEqual("https://jsonfeed.org/version/1.1", rv.get("version"))
 
     def test_publish_multipages(self):
@@ -160,7 +160,7 @@ class TestPublish(unittest.TestCase):
         theme = Theme()
         pages = itertools.chain.from_iterable(theme.expand(i, output=pathlib.Path(".")) for i in pages)
         settings = theme.get_feed_settings("all")
-        feed = theme.publish(None, pages, **settings)
+        feed = theme.publish(pages, **settings)
         self.assertEqual(2, len(feed["items"]))
 
     def test_publish_multishots(self):
@@ -197,5 +197,5 @@ class TestPublish(unittest.TestCase):
         theme = Theme()
         pages = itertools.chain.from_iterable(theme.expand(i, output=pathlib.Path(".")) for i in pages)
         settings = theme.get_feed_settings("all")
-        feed = theme.publish(None, pages, **settings)
+        feed = theme.publish(pages, **settings)
         self.assertEqual(1, len(feed["items"]))

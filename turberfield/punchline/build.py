@@ -107,7 +107,7 @@ class Build:
                 yield from Build.build_pages(path.read_text(), theme, uid=uid, path=path, name=path.stem)
 
     @staticmethod
-    def find_theme(cfg, default="january"):
+    def find_theme(cfg, output, default="january"):
         name = cfg[cfg.default_section].get("theme", default)
         try:
             theme_module = importlib.import_module(name)
@@ -124,7 +124,7 @@ class Build:
             theme_module = inspect.getmodule(theme_class)
 
         theme_package = ".".join(theme_module.__name__.split(".")[:-1])
-        return theme_class and theme_class(cfg, parent_package=theme_package)
+        return theme_class and theme_class(cfg, output.resolve(), parent_package=theme_package)
 
     @staticmethod
     def filter_pages(pages, theme: Theme, now=None):

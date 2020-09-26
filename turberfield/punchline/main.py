@@ -68,14 +68,14 @@ def main(args):
         # logging.config.fileConfig(cfg, disable_existing_loggers=False)
         logging.info("Using config file at {0}".format(cfg_path))
 
-        theme = Build.find_theme(cfg)
+        output = args.output or args.inputs[0].joinpath("output")
+        theme = Build.find_theme(cfg, output=output)
         if not theme:
             logging.critical("No theme found.")
             return 1
 
         for path in args.inputs:
             articles = list(Build.filter_pages(Build.find_articles(path, theme), theme))
-            output = (args.output or path.joinpath("output")).resolve()
 
         feeds = {f: set() for p in articles for f in p.feeds}
         tags = {t: set() for p in articles for t in p.tags}
@@ -94,8 +94,8 @@ def main(args):
             # Write feed output
             for feed_name, pages in feeds.items():
                 settings = theme.get_feed_settings(feed_name)
-                feed = writer.publish(output, pages, **settings)
-                feed_path = output.joinpath(
+                feed = writer.publish(pages, **settings)
+                feed_path = theme.output.joinpath(
                     settings.getpath("feed_url").relative_to(settings.getpath("feed_url").anchor)
                 )
                 feed_path.parent.mkdir(parents=True, exist_ok=True)
@@ -111,7 +111,7 @@ def main(args):
             #    len(cover_pages), "" if len(cover_pages) == 1 else "s")
             #)
 
-        logging.info("Wrote output to {0}".format(theme.root))
+        logging.info("Wrote output to {0}".format(theme.output))
 
     return 0
 
