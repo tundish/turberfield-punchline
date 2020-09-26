@@ -27,13 +27,14 @@ class Widget:
 
     catalogue = set()
 
-    def __init__(self, package, *resources, config="theme"):
+    def __init__(self, package, *resources, config="theme", optional=False):
         self.package = package
         self.resources = resources
         self.config = config
+        self.optional = optional
 
-    def __call__(self, **kwargs):
-        return self.Fragment(None, None, None, None)
+    def __call__(self, *args, **kwargs):
+        return self.Fragment(None, "", "", "")
 
     @classmethod
     def register(cls, *args):
@@ -45,6 +46,6 @@ class Widget:
 
 class WebBadge(Widget):
 
-    def __call__(self, **kwargs):
-        html = "<strong>Hello World!</strong>"
-        return self.Fragment(None, None, html, None)
+    def __call__(self, *args, **kwargs):
+        html = '<div class="fit-{0}"><strong>Hello World!</strong></div>'.format(kwargs.get("layout", "gallery"))
+        return self.Fragment(None, None, html, "Hello World!")

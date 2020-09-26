@@ -106,17 +106,28 @@ class Theme(Renderer):
             [(section_ordering[w.config], w) for w in Widget.catalogue if w.config in self.cfg]
         )]
 
-    def expand(self, page, *args, **kwargs):
-        # TODO: pass in widgets at this point for cover pages.
-        # Cover handler methods?
+    def expand(self, page, *args, widgets=None, **kwargs):
         presenter = Presenter(page.model)
+        if widgets:
+            fragments = list(zip(
+                *(w(page, **dict(self.cfg[w.config].items())) for w in widgets)
+            ))
+        else:
+            fragments = [[]] * len(Widget.Fragment._fields)
+
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
         for n, frame in enumerate(presenter.frames):
             frame = presenter.animate(frame, dwell, pause, react=True)
             next_frame = self.frame_path(self.output, page, n + 1).relative_to(self.output).as_posix()
-            text = self.render_frame_to_text(frame)
+            body = "\n".join(itertools.chain(
+                (self.render_frame_to_html(
+                    frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
+                ), ),
+                fragments[2])
+            )
+            text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments[3]))
             html = self.render_body_html(
                 next_= next_frame if n < len(presenter.frames) -1 else None,
                 refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
@@ -124,9 +135,10 @@ class Theme(Renderer):
             ).format(
                 "", # "\n".join(i.head for i in self.facades)
                 self.render_dict_to_css(vars(self.settings)),
-                self.render_frame_to_html(
-                    frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
-                )
+                body
+                #self.render_frame_to_html(
+                #    frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
+                #)
             )
             path = self.frame_path(self.output, page, n)
             yield page._replace(ordinal=n, text=text, html=html, path=path)
@@ -157,20 +169,25 @@ class Theme(Renderer):
             for i in feed_settings.values()
         ])
         pages = sorted({page for category in feeds.values() for page in category})
-        for n, (title, file_name) in enumerate(self.covers.items()):
-            yield Site.Page(
-                key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
-                title=title.capitalize(),
-                model=None,
-                text="",
-                html=self.render_body_html(title=title).format(
-                    feed_links,
-                    self.render_dict_to_css(vars(self.settings)),
-                    self.render_feed_to_html(pages, self.output, self.cfg),
-                ),
-                path=self.output.joinpath(title).with_suffix(".html"),
-                feeds=tuple(), tags=tuple(),
-            )
+        title = page.path.stem
+        rv = list(self.expand(page, widgets=self.widgets))
+        rv.insert(0, rv[0]._replace(path=self.output.joinpath(title).with_suffix(".html")))
+        
+        yield from rv
+        return
+        yield Site.Page(
+            key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
+            title=title.capitalize(),
+            model=None,
+            text="",
+            html=self.render_body_html(title=title).format(
+                feed_links,
+                self.render_dict_to_css(vars(self.settings)),
+                self.render_feed_to_html(pages, self.output, self.cfg),
+            ),
+            path=self.output.joinpath(title).with_suffix(".html"),
+            feeds=tuple(), tags=tuple(),
+        )
 
     def publish(self, pages, *, site_url, feed_name, feed_url, feed_title, **kwargs):
         rv = {
