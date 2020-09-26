@@ -169,7 +169,7 @@ class Theme(Renderer):
                     self.render_dict_to_css(vars(self.settings)),
                     self.render_feed_to_html(pages, self.root, self.cfg),
                 ),
-                path=self.root.joinpath(title).with_suffix(".html"),
+                path=output.joinpath(title).with_suffix(".html"),
                 feeds=tuple(), tags=tuple(),
             )
 
@@ -184,12 +184,12 @@ class Theme(Renderer):
         }
 
         items = {k: list(v) for k, v in itertools.groupby(
-            sorted(pages, key=operator.attrgetter("key")), key=operator.attrgetter("key")
+            sorted(pages, key=lambda x: x.key + (x.ordinal,)), key=operator.attrgetter("key")
         )}
         for _, series in sorted(items.items()):
             page = series[0]
             metadata = Site.multidict(page.model.metadata)
-            page_path = page.path.relative_to(self.root).as_posix() if self.root else page.path
+            page_path = page.path.relative_to(output).as_posix() if self.root else page.path
             item = {
                 "id": f"{site_url}{page_path}",
                 "url": f"{site_url}{page_path}",

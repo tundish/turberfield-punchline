@@ -75,7 +75,7 @@ def main(args):
 
         for path in args.inputs:
             articles = list(Build.filter_pages(Build.find_articles(path, theme), theme))
-            output = args.output or path.joinpath("output")
+            output = (args.output or path.joinpath("output")).resolve()
 
         feeds = {f: set() for p in articles for f in p.feeds}
         tags = {t: set() for p in articles for t in p.tags}
