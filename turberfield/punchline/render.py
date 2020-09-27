@@ -17,6 +17,18 @@ import functools
 
 from turberfield.dialogue.model import Model
 
+"""
+punchline-banner
+    A region of decorative text and background images. Style multiple `punchline-banner`s with CSS `nth-of-type`.
+punchline-widget punchline-widget-<class>
+    An instance of `punchline.widget.Widget`.
+punchline-spoken
+    A region to be animated as if spoken (may include images, icons, etc)
+punchline-colour-shadows
+    A reference to a theme-specific colour variable.
+
+"""
+
 
 class Renderer:
 
@@ -58,13 +70,13 @@ class Renderer:
         audio = "\n".join(Renderer.animated_audio_to_html(i) for i in frame[Model.Audio])
         return f"""
     {audio}
-    <section class="fit-banner">
+    <section class="punchline-banner">
     <h1>{heading}</h1>
     </section>
-    <aside class="fit-gallery">
+    <aside class="punchline-spoken">
     {stills}
     </aside>
-    <div class="fit-speech">
+    <div class="punchline-spoken">
     <main>
     <ul class="obj-dialogue">
     {dialogue}
@@ -107,7 +119,7 @@ class Renderer:
             if not page.ordinal
         )
         return f"""
-    <section class="fit-banner">
+    <section class="punchline-banner">
     <h1>{ heading }</h1>
     </section>
     <div class="fit-speech">
@@ -143,7 +155,7 @@ class Renderer:
     {'<meta http-equiv="refresh" content="{0};/{1}">'.format(refresh, next_) if refresh and next_ else ''}
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{title}</title>
-    <link rel="stylesheet" href="/css/bfost.css" />
+    <link rel="stylesheet" href="/css/punchline.css" />
     {{0}}
     </head>
     <body>

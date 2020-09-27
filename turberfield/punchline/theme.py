@@ -144,10 +144,6 @@ class Theme(Renderer):
             yield page._replace(ordinal=n, text=text, html=html, path=path)
 
     @property
-    def covers(self):
-        return {i: "{0}.rst".format(i) for i in ("index", "about", "contact")}
-
-    @property
     def handlers(self):
         return {
             "index.rst": self.cover,
