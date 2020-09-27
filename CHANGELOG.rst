@@ -15,6 +15,7 @@ Extensive refactoring of the Theme class and public API.
 * `dwell` and `pause` can be set from dialogue metadata.
 * Removed the `--theme` option. It is now set in the default section
   of the config file.
+* Namespaced the variables used in styling themes.
 
 0.3.0
 =====
