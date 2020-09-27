@@ -1,4 +1,4 @@
-/* Base : Fit : Objects : State: Theme */
+/* Base : Grid : Objects : State: Theme */
 
 /*  Base    */
 
@@ -32,7 +32,7 @@ src: local("Bernier Shade"), local("BernierShade-Regular"),
 font-weight: 100 950;
 }
 
-/*  Fit  */
+/*  Grid and Flex */
 
 body {
 display: grid;
@@ -41,7 +41,7 @@ grid-template-areas:
 "banner  speech  images"
 "banner  speech  images"
 "banner  speech  images"
-"banner  legals  legals";
+"banner  legals  images";
 height: 100vh;
 }
 
@@ -103,38 +103,37 @@ justify-content: flex-end;
 
 /*  Objects  */
 
-ul.obj-dialogue {
+.punchline-spoken ul {
 padding: 0.5em;
 }
 
-ul.obj-dialogue li {
+.punchline-spoken li {
 animation-name: fadeinout;
 animation-fill-mode: both;
-list-style-type: none;
 padding-bottom: 1.3em;
 }
 
-ul.obj-dialogue li:last-of-type {
+.punchline-spoken li:last-of-type {
 animation-name: fadein;
 }
 
-.obj-persona {
+.punchline-spoken blockquote header {
 font-family: var(--system);
 font-size: 1.1rem;
 font-weight: lighter;
 margin: 0.25rem 0 0.25rem 0;
 }
 
-.obj-persona:after{
+.punchline-spoken blockquote header:after {
 content: ":";
 }
 
-.obj-speech {
+.punchline-spoken p {
 font-family: var(--detail);
 font-size: 1.3rem;
 }
 
-.obj-entity + .obj-speech {
+.punchline-spoken blockquote > header:empty + p {
 font-style: italic;
 }
 

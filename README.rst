@@ -198,12 +198,12 @@ If all you need to change are the colours, you can achieve that with a modificat
 Try adding the following section, and experimenting with the colour values::
 
     [theme]
-    washout = hsl(50, 0%, 100%, 1.0)
-    shadows = hsl(37, 93%, 12%, 0.7)
-    midtone = hsl(86, 93%, 12%, 0.7)
-    hilight = hsl(224, 70%, 16%, 0.7)
-    glamour = hsl(76, 80%, 35%, 1.0)
-    gravity = hsl(36, 20%, 18%, 1.0)
+    punchline-colour-washout = hsl(50, 0%, 100%, 1.0)
+    punchline-colour-shadows = hsl(37, 93%, 12%, 0.7)
+    punchline-colour-midtone = hsl(86, 93%, 12%, 0.7)
+    punchline-colour-hilight = hsl(224, 70%, 16%, 0.7)
+    punchline-colour-glamour = hsl(76, 80%, 35%, 1.0)
+    punchline-colour-gravity = hsl(36, 20%, 18%, 1.0)
 
 Installation
 ============

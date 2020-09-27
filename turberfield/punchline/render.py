@@ -43,13 +43,14 @@ class Renderer:
 
     @staticmethod
     def animated_line_to_html(anim):
+        name = "{0.firstname} {0.surname}".format(
+            anim.element.persona.name
+        ) if hasattr(anim.element.persona, "name") else ""
         return f"""
     <li style="animation-delay: {anim.delay:.2f}s; animation-duration: {anim.duration:.2f}s">
-    <blockquote class="obj-line">
-    <header class="{'obj-persona' if hasattr(anim.element.persona, '_name') else 'obj-entity'}">
-    { '{0.firstname} {0.surname}'.format(anim.element.persona.name) if hasattr(anim.element.persona, 'name') else ''}
-    </header>
-    <p class="obj-speech">{ anim.element.html }</p>
+    <blockquote>
+    <header>{ name }</header>
+    <p>{ anim.element.html }</p>
     </blockquote>
     </li>"""
 
@@ -78,7 +79,7 @@ class Renderer:
     </aside>
     <div class="punchline-spoken">
     <main>
-    <ul class="obj-dialogue">
+    <ul>
     {dialogue}
     </ul>
     </main>
@@ -122,7 +123,7 @@ class Renderer:
     <section class="punchline-banner">
     <h1>{ heading }</h1>
     </section>
-    <div class="fit-speech">
+    <div class="punchline-spoken">
     <nav>
     <ol>
     { feed_list }
