@@ -19,6 +19,7 @@
 
 from collections import defaultdict
 from collections import namedtuple
+import textwrap
 
 
 class Widget:
@@ -47,5 +48,7 @@ class Widget:
 class WebBadge(Widget):
 
     def __call__(self, *args, **kwargs):
-        html = '<div class="fit-{0}"><strong>Hello World!</strong></div>'.format(kwargs.get("layout", "gallery"))
+        html = textwrap.dedent("""
+        <section class="punchline-widget punchline-widget-{0}"><strong>Hello World!</strong></section>
+        """).format(self.__class__.__name__.lower())
         return self.Fragment(None, None, html, "Hello World!")

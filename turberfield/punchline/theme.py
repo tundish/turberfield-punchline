@@ -54,7 +54,7 @@ class Theme(Renderer):
 
     @staticmethod
     def frame_path(location, page, ordinal):
-        return location.joinpath(page.script_slug, page.scene_slug, f"{ordinal:03d}").with_suffix(".html")
+        return location.joinpath(page.scene_slug, f"{ordinal:03d}").with_suffix(".html")
 
     @staticmethod
     def slug(text, table="".maketrans({i: i for i in string.ascii_letters + string.digits + "_-"})):
@@ -109,11 +109,15 @@ class Theme(Renderer):
     def expand(self, page, *args, widgets=None, **kwargs):
         presenter = Presenter(page.model)
         if widgets:
-            fragments = list(zip(
-                *(w(page, **dict(self.cfg[w.config].items())) for w in widgets)
-            ))
+            fragments = {
+                key: values
+                for key, *values in zip(
+                    Widget.Fragment._fields, *(w(page, **dict(self.cfg[w.config].items())) for w in widgets)
+                )
+            }
         else:
-            fragments = [[]] * len(Widget.Fragment._fields)
+            fragments = {i: tuple() for i in Widget.Fragment._fields}
+        print(fragments)
 
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
@@ -125,9 +129,9 @@ class Theme(Renderer):
                 (self.render_frame_to_html(
                     frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
                 ), ),
-                fragments[2])
+                fragments["body"])
             )
-            text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments[3]))
+            text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
             html = self.render_body_html(
                 next_= next_frame if n < len(presenter.frames) -1 else None,
                 refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
