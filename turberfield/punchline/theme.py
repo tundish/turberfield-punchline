@@ -112,7 +112,8 @@ class Theme(Renderer):
             fragments = {
                 key: values
                 for key, *values in zip(
-                    Widget.Fragment._fields, *(w(page, **dict(self.cfg[w.config].items())) for w in widgets)
+                    Widget.Fragment._fields,
+                    *(w(page, **dict(self.cfg[w.config].items())) for w in widgets if w.config in self.cfg)
                 )
             }
         else:
@@ -169,9 +170,9 @@ class Theme(Renderer):
             for i in feed_settings.values()
         ])
         pages = sorted({page for category in feeds.values() for page in category})
-        title = page.path.stem
-        rv = list(self.expand(page, widgets=self.widgets))
-        rv.insert(0, rv[0]._replace(path=self.output.joinpath(title).with_suffix(".html")))
+        title = self.cfg[self.cfg.default_section]["site_title"]
+        rv = list(self.expand(page._replace(title=title), widgets=self.widgets))
+        rv.insert(0, rv[0]._replace(path=self.output.joinpath(page.path.stem).with_suffix(".html")))
         
         yield from rv
         return

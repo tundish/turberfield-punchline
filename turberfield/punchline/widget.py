@@ -48,7 +48,12 @@ class Widget:
 class WebBadge(Widget):
 
     def __call__(self, *args, **kwargs):
+        text = kwargs.get("text", "")
+        kwargs["text"] = "".join("<span>{0}</span> ".format(i) for i in text.split(" "))
         html = textwrap.dedent("""
-        <section class="punchline-widget punchline-widget-{0}"><strong>Hello World!</strong></section>
-        """).format(self.__class__.__name__.lower())
-        return self.Fragment(None, None, html, "Hello World!")
+        <section class="punchline-widget punchline-widget-{0}">
+        <img src="{src}" alt="{alt}" width="{width}" height="{height}"/>
+        <a href="{url}">{text}</a>
+        </section>
+        """).format(self.__class__.__name__.lower(), **kwargs)
+        return self.Fragment(None, None, html, text)
