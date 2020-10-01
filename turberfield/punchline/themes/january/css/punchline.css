@@ -132,10 +132,6 @@ font-weight: lighter;
 margin: 0.25rem 0 0.25rem 0;
 }
 
-.punchline-spoken blockquote header:after {
-content: ":";
-}
-
 .punchline-spoken p {
 font-family: var(--detail);
 font-size: 1.3rem;
