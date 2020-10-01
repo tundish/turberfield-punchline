@@ -119,6 +119,8 @@ class Theme(Renderer):
         pause = float(next(reversed(metadata["pause"]), "1.0"))
         for n, frame in enumerate(presenter.frames):
             frame = presenter.animate(frame, dwell, pause, react=True)
+            text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
+
             next_frame = self.frame_path(self.output, page, n + 1).relative_to(self.output).as_posix()
             body = "\n".join(itertools.chain(
                 (self.render_frame_to_html(
@@ -126,19 +128,16 @@ class Theme(Renderer):
                 ), ),
                 fragments["body"])
             )
-            text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
             html = self.render_body_html(
                 next_= next_frame if n < len(presenter.frames) -1 else None,
                 refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
                 title=page.title.capitalize(),
             ).format(
-                "", # "\n".join(i.head for i in self.facades)
+                "\n".join(fragments["head"]),
                 self.render_dict_to_css(vars(self.settings)),
                 body
-                #self.render_frame_to_html(
-                #    frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
-                #)
             )
+
             path = self.frame_path(self.output, page, n)
             yield page._replace(ordinal=n, text=text, html=html, path=path)
 
@@ -157,36 +156,23 @@ class Theme(Renderer):
 
         """
         logging.info("Handling {0}".format(page))
-        feed_links = "\n".join([
-            '<link rel="alternate" type="application/json" title="{feed_title}" href="{feed_url}" />'.format(
-                **self.get_feed_settings(f)
-            )
-            for f in feeds
-        ])
-        fragments = (
+        fragments = [Widget.Fragment(
+            head="\n".join([
+                '<link rel="alternate" type="application/json" title="{feed_title}" href="{feed_url}" />'.format(
+                    **self.get_feed_settings(f)
+                )
+            for f in feeds]),
+            style=None, body=None, text=None
+        )]
+        fragments += [
             w(page, feeds, tags, **dict(self.cfg[w.config].items()) if w.config in self.cfg else {})
             for w in self.widgets if not w.optional or w.config in self.cfg
-        )
+        ]
 
         title = self.cfg[self.cfg.default_section]["site_title"]
         rv = list(self.expand(page._replace(title=title), fragments=fragments))
         rv.insert(0, rv[0]._replace(path=self.output.joinpath(page.path.stem).with_suffix(".html")))
-        
         yield from rv
-        return
-        yield Site.Page(
-            key=(n,), ordinal=0, script_slug=None, scene_slug=None, lifecycle=None,
-            title=title.capitalize(),
-            model=None,
-            text="",
-            html=self.render_body_html(title=title).format(
-                feed_links,
-                self.render_dict_to_css(vars(self.settings)),
-                self.render_feed_to_html(pages, self.output, self.cfg),
-            ),
-            path=self.output.joinpath(title).with_suffix(".html"),
-            feeds=tuple(), tags=tuple(),
-        )
 
     def publish(self, pages, *, site_url, feed_name, feed_url, feed_title, **kwargs):
         rv = {

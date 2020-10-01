@@ -24,7 +24,7 @@ import textwrap
 
 class Widget:
 
-    Fragment = namedtuple("Fragment", ["metadata", "style", "body", "text"])
+    Fragment = namedtuple("Fragment", ["head", "style", "body", "text"])
 
     catalogue = set()
 
