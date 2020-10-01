@@ -28,11 +28,12 @@ class Widget:
 
     catalogue = set()
 
-    def __init__(self, package, *resources, config="theme", optional=False):
+    def __init__(self, package, *resources, config="theme", optional=False, output=None):
         self.package = package
         self.resources = resources
         self.config = config
         self.optional = optional
+        self.output = output
 
     def __call__(self, *args, **kwargs):
         return self.Fragment(None, "", "", "")
@@ -43,6 +44,31 @@ class Widget:
             if isinstance(f, cls):
                 cls.catalogue.add(f)
         return cls.catalogue.copy()
+
+
+class ListOfContents(Widget):
+
+    def __call__(self, page, feeds: dict, tags: dict, *args, **kwargs):
+        pages = sorted({page for category in feeds.values() for page in category})
+        contents = "\n".join(
+            '<li><a href="{0}{1}">{2}</a></li>'.format(
+                kwargs.get("site_url", "/"),
+                page.path.relative_to(self.output).as_posix(),
+                page.title.title()
+            )
+            for page in pages
+            if not page.ordinal
+        )
+        html = textwrap.dedent("""
+        <section class="punchline-widget punchline-widget-{0}">
+        <nav>
+        <ol>
+        {1}
+        </ol>
+        </nav>
+        </section>
+        """).format(self.__class__.__name__.lower(), contents, **kwargs)
+        return self.Fragment(None, None, html, "")
 
 
 class WebBadge(Widget):

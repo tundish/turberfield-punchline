@@ -35,6 +35,7 @@ from turberfield.punchline.render import Renderer
 from turberfield.punchline.site import Site
 from turberfield.punchline.types import Settings
 from turberfield.punchline.widget import Widget
+from turberfield.punchline.widget import ListOfContents
 from turberfield.punchline.widget import WebBadge
 
 
@@ -72,7 +73,10 @@ class Theme(Renderer):
             if self.cfg and "theme" in self.cfg else {}
         )
         self.settings = Settings(**dict(self.definitions, **theme_section))
-        Widget.register(WebBadge("turberfield.punchline", "assets", config="turberfield.punchline"))
+        Widget.register(ListOfContents("turberfield.punchline", config="jsonfeed.org", output=output))
+        Widget.register(
+            WebBadge("turberfield.punchline", "assets", config="turberfield.punchline", optional=True)
+        )
 
     def __enter__(self):
         return self
@@ -106,19 +110,9 @@ class Theme(Renderer):
             [(section_ordering[w.config], w) for w in Widget.catalogue if w.config in self.cfg]
         )]
 
-    def expand(self, page, *args, widgets=None, **kwargs):
+    def expand(self, page, *args, fragments=[], **kwargs):
         presenter = Presenter(page.model)
-        if widgets:
-            fragments = {
-                key: values
-                for key, *values in zip(
-                    Widget.Fragment._fields,
-                    *(w(page, **dict(self.cfg[w.config].items())) for w in widgets if w.config in self.cfg)
-                )
-            }
-        else:
-            fragments = {i: tuple() for i in Widget.Fragment._fields}
-        print(fragments)
+        fragments = {key: filter(None, values) for key, *values in zip(Widget.Fragment._fields, *fragments)}
 
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
@@ -163,15 +157,19 @@ class Theme(Renderer):
 
         """
         logging.info("Handling {0}".format(page))
-        feed_settings = {i: self.get_feed_settings(i) for i in feeds}
-        # Feed links is a widget?
         feed_links = "\n".join([
-            '<link rel="alternate" type="application/json" title="{0[feed_title]}" href="{0[feed_url]}" />'.format(i)
-            for i in feed_settings.values()
+            '<link rel="alternate" type="application/json" title="{feed_title}" href="{feed_url}" />'.format(
+                **self.get_feed_settings(f)
+            )
+            for f in feeds
         ])
-        pages = sorted({page for category in feeds.values() for page in category})
+        fragments = (
+            w(page, feeds, tags, **dict(self.cfg[w.config].items()) if w.config in self.cfg else {})
+            for w in self.widgets if not w.optional or w.config in self.cfg
+        )
+
         title = self.cfg[self.cfg.default_section]["site_title"]
-        rv = list(self.expand(page._replace(title=title), widgets=self.widgets))
+        rv = list(self.expand(page._replace(title=title), fragments=fragments))
         rv.insert(0, rv[0]._replace(path=self.output.joinpath(page.path.stem).with_suffix(".html")))
         
         yield from rv
