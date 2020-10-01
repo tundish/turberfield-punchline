@@ -35,10 +35,10 @@ class Renderer:
     @staticmethod
     def animated_audio_to_html(anim):
         return f"""<div>
-    <audio src="/audio/{anim.element.resource}" autoplay="autoplay"
-    preload="auto" {'loop="loop"' if anim.element.loop and int(anim.element.loop) > 1 else ""}>
-    </audio>
-    </div>"""
+<audio src="/audio/{anim.element.resource}" autoplay="autoplay"
+preload="auto" {'loop="loop"' if anim.element.loop and int(anim.element.loop) > 1 else ""}>
+</audio>
+</div>"""
 
 
     @staticmethod
@@ -47,20 +47,20 @@ class Renderer:
             anim.element.persona.name
         ) if hasattr(anim.element.persona, "name") else ""
         return f"""
-    <li style="animation-delay: {anim.delay:.2f}s; animation-duration: {anim.duration:.2f}s">
-    <blockquote>
-    <header>{ name }</header>
-    <p>{ anim.element.html }</p>
-    </blockquote>
-    </li>"""
+<li style="animation-delay: {anim.delay:.2f}s; animation-duration: {anim.duration:.2f}s">
+<blockquote>
+<header>{ name }</header>
+<p>{ anim.element.html }</p>
+</blockquote>
+</li>"""
 
 
     @staticmethod
     def animated_still_to_html(anim):
         return f"""
-    <div style="animation-duration: {anim.duration}s; animation-delay: {anim.delay}s">
-    <img src="/img/{anim.element.resource}" alt="{anim.element.package} {anim.element.resource}" />
-    </div>"""
+<div style="animation-duration: {anim.duration}s; animation-delay: {anim.delay}s">
+<img src="/img/{anim.element.resource}" alt="{anim.element.package} {anim.element.resource}" />
+</div>"""
 
 
     @staticmethod
@@ -70,27 +70,27 @@ class Renderer:
         stills = "\n".join(Renderer.animated_still_to_html(i) for i in frame[Model.Still])
         audio = "\n".join(Renderer.animated_audio_to_html(i) for i in frame[Model.Audio])
         return f"""
-    {audio}
-    <section class="punchline-banner">
-    <h1>{heading}</h1>
-    </section>
-    <aside class="punchline-spoken">
-    {stills}
-    </aside>
-    <div class="punchline-spoken">
-    <main>
-    <ul>
-    {dialogue}
-    </ul>
-    </main>
-    <nav>
-    <ul>
-    <li><form role="form" action="/" method="GET" name="contents">
-    {'<button action="submit">Home</button>' if final else ''}
-    </form></li>
-    </ul>
-    </nav>
-    </div>"""
+{audio}
+<section class="punchline-banner">
+<h1>{heading}</h1>
+</section>
+<aside class="punchline-spoken">
+{stills}
+</aside>
+<div class="punchline-spoken">
+<main>
+<ul>
+{dialogue}
+</ul>
+</main>
+<nav>
+<ul>
+<li><form role="form" action="/" method="GET" name="contents">
+{'<button action="submit">Home</button>' if final else ''}
+</form></li>
+</ul>
+</nav>
+</div>"""
 
 
     @staticmethod
@@ -105,66 +105,32 @@ class Renderer:
 
 
     @staticmethod
-    def render_feed_to_html(pages, root, config=None):
-        heading = " ".join(
-            "<span>{0}</span>".format(i)
-            for i in config.defaults()["site_title"].split(" ")
-        ) if config else ""
-        feed_list = "\n".join(
-            '<li><a href="{0}{1}">{2}</a></li>'.format(
-                config.defaults()["site_url"] if config else "",
-                page.path.relative_to(root).as_posix(),
-                page.title.title()
-            )
-            for page in pages
-            if not page.ordinal
-        )
-        return f"""
-    <section class="punchline-banner">
-    <h1>{ heading }</h1>
-    </section>
-    <div class="punchline-spoken">
-    <nav>
-    <ol>
-    { feed_list }
-    </ol>
-    </nav>
-    <main>
-    <ul>
-    </ul>
-    </main>
-    </div>"""
-
-
-    @staticmethod
     def render_dict_to_css(mapping=None, tag=":root"):
         mapping = mapping or {}
         entries = "\n".join("--{0}: {1};".format(k, v) for k, v in mapping.items())
         return f"""{tag} {{
-    {entries}
-    }}"""
+{entries}
+}}"""
 
 
     @staticmethod
     @functools.lru_cache()
     def render_body_html(title="", refresh=None, next_=""):
         return f"""<!DOCTYPE html>
-    <html lang="en">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {'<meta http-equiv="refresh" content="{0};/{1}">'.format(refresh, next_) if refresh and next_ else ''}
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{title}</title>
-    <link rel="stylesheet" href="/css/punchline.css" />
-    {{0}}
-    </head>
-    <body>
-    <style type="text/css">
-    {{1}}
-    </style>
-    {{2}}
-    </body>
-    </html>"""
-
-
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{'<meta http-equiv="refresh" content="{0};/{1}">'.format(refresh, next_) if refresh and next_ else ''}
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>{title}</title>
+<link rel="stylesheet" href="/css/punchline.css" />
+{{0}}
+</head>
+<body>
+<style type="text/css">
+{{1}}
+</style>
+{{2}}
+</body>
+</html>"""
