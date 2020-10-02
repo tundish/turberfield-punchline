@@ -24,7 +24,7 @@ class January(Theme):
     @property
     def widgets(self):
         return Widget.register(
-            Widget(self.parent_package, "css", "fonts"),
+            Widget(self.parent_package, "css", "fonts", optional=False),
         )
 
     @property

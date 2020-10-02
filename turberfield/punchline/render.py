@@ -16,6 +16,7 @@
 import functools
 
 from turberfield.dialogue.model import Model
+from turberfield.punchline.presenter import Presenter
 
 """
 punchline-banner
@@ -69,6 +70,7 @@ preload="auto" {'loop="loop"' if anim.element.loop and int(anim.element.loop) > 
         dialogue = "\n".join(Renderer.animated_line_to_html(i) for i in frame[Model.Line])
         stills = "\n".join(Renderer.animated_still_to_html(i) for i in frame[Model.Still])
         audio = "\n".join(Renderer.animated_audio_to_html(i) for i in frame[Model.Audio])
+        last = frame[Model.Line][-1] if frame[Model.Line] else Presenter.Animation(0, 0, None)
         return f"""
 {audio}
 <section class="punchline-banner">
@@ -85,7 +87,8 @@ preload="auto" {'loop="loop"' if anim.element.loop and int(anim.element.loop) > 
 </main>
 <nav>
 <ul>
-<li><form role="form" action="/" method="GET" name="contents">
+<li style="animation-delay: {last.delay:.2f}s; animation-duration: {last.duration:.2f}s">
+<form role="form" action="/" method="GET" name="contents">
 {'<button action="submit">Home</button>' if final else ''}
 </form></li>
 </ul>

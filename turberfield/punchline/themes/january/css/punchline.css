@@ -61,9 +61,10 @@ flex-direction: column;
 grid-area: speech;
 }
 
-div.punchline-spoken main {
-padding-left: 1.0rem;
-padding-top: 0.9rem;
+div.punchline-spoken nav ul {
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
 }
 
 aside.punchline-spoken {
@@ -74,7 +75,15 @@ grid-area: images;
 min-width: 128px;
 }
 
-.punchline-widget {
+.punchline-widget-listofcontents {
+align-items: center;
+display: flex inline;
+flex-direction: row;
+grid-area: speech;
+justify-content: center;
+}
+
+.punchline-widget-webbadge {
 align-items: center;
 display: flex inline;
 flex-direction: row;
@@ -101,12 +110,8 @@ display: none;
 main {
 flex-grow: 1;
 padding: 0.5rem;
-}
-
-nav ul {
-display: flex;
-flex-direction: row;
-justify-content: flex-end;
+padding-left: 1.0rem;
+padding-top: 0.9rem;
 }
 
 /*  Objects  */
@@ -138,7 +143,8 @@ font-size: 1.3rem;
 }
 
 .punchline-spoken blockquote > header:empty + p {
-font-style: italic;
+font-variant: small-caps;
+letter-spacing: 0.125rem;
 }
 
 
@@ -214,20 +220,6 @@ border: 1px dashed var(--punchline-colour-shadows, grey);
 color: var(--punchline-colour-glamour, steelblue);
 }
 
-
-label {
-color: var(--punchline-colour-washout, whitesmoke);
-font-family: var(--system);
-font-size: 0.9rem;
-font-weight: bolder;
-letter-spacing: 0.025rem;
-margin: 0.2rem;
-padding-left: 0.6rem;
-}
-
-label:after {
-content: ": ";
-}
 
 button {
 border: 2px solid var(--punchline-colour-washout, whitesmoke);

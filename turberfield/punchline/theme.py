@@ -73,9 +73,11 @@ class Theme(Renderer):
             if self.cfg and "theme" in self.cfg else {}
         )
         self.settings = Settings(**dict(self.definitions, **theme_section))
-        Widget.register(ListOfContents("turberfield.punchline", config="jsonfeed.org", output=output))
         Widget.register(
-            WebBadge("turberfield.punchline", "assets", config="turberfield.punchline", optional=True)
+            ListOfContents("turberfield.punchline", config="jsonfeed.org", optional=False, output=output)
+        )
+        Widget.register(
+            WebBadge("turberfield.punchline", "assets", config="turberfield.punchline")
         )
 
     def __enter__(self):
@@ -105,10 +107,7 @@ class Theme(Renderer):
 
     @property
     def widgets(self):
-        section_ordering = {s: n for n, s in enumerate(self.cfg.sections())}
-        return [i[1] for i in sorted(
-            [(section_ordering[w.config], w) for w in Widget.catalogue if w.config in self.cfg]
-        )]
+        return [i for i in Widget.catalogue if not (i.optional and i.config not in self.cfg)]
 
     def expand(self, page, *args, fragments=[], **kwargs):
         presenter = Presenter(page.model)
@@ -117,6 +116,7 @@ class Theme(Renderer):
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
+        show_nav = not any (i for i in self.handlers if i.split(".")[0] == page.path.stem)
         for n, frame in enumerate(presenter.frames):
             frame = presenter.animate(frame, dwell, pause, react=True)
             text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
@@ -124,7 +124,7 @@ class Theme(Renderer):
             next_frame = self.frame_path(self.output, page, n + 1).relative_to(self.output).as_posix()
             body = "\n".join(itertools.chain(
                 (self.render_frame_to_html(
-                    frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1)
+                    frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1) and show_nav
                 ), ),
                 fragments["body"])
             )
@@ -166,7 +166,7 @@ class Theme(Renderer):
         )]
         fragments += [
             w(page, feeds, tags, **dict(self.cfg[w.config].items()) if w.config in self.cfg else {})
-            for w in self.widgets if not w.optional or w.config in self.cfg
+            for w in self.widgets
         ]
 
         title = self.cfg[self.cfg.default_section]["site_title"]

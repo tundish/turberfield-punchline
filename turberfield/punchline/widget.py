@@ -26,9 +26,9 @@ class Widget:
 
     Fragment = namedtuple("Fragment", ["head", "style", "body", "text"])
 
-    catalogue = set()
+    catalogue = list()
 
-    def __init__(self, package, *resources, config="theme", optional=False, output=None):
+    def __init__(self, package, *resources, config="theme", optional=True, output=None):
         self.package = package
         self.resources = resources
         self.config = config
@@ -41,8 +41,8 @@ class Widget:
     @classmethod
     def register(cls, *args):
         for f in args:
-            if isinstance(f, cls):
-                cls.catalogue.add(f)
+            if isinstance(f, cls) and f not in cls.catalogue:
+                cls.catalogue.append(f)
         return cls.catalogue.copy()
 
 

@@ -41,28 +41,22 @@ class ThemeTests(CleanCatalogue, unittest.TestCase):
     def test_widgets(self):
         cfg = Settings.config_parser()
         theme = Theme(cfg)
-        self.assertFalse(theme.widgets)
+        self.assertEqual(1, len(theme.widgets))
 
         cfg.add_section("turberfield.punchline")
-        self.assertEqual(1, len(theme.widgets))
+        self.assertEqual(2, len(theme.widgets))
 
         catalogue = Widget.register(
             Widget("turberfield.punchline", "css", config="a.com")
         )
-        self.assertEqual(1, len(theme.widgets))
+        self.assertEqual(2, len(theme.widgets))
 
         cfg.add_section("a.com")
         widgets = theme.widgets
-        self.assertEqual(2, len(theme.widgets))
-        self.assertEqual("turberfield.punchline", widgets[0].config)
-        self.assertEqual("a.com", widgets[1].config)
-
-        cfg.remove_section("turberfield.punchline")
-        cfg.add_section("turberfield.punchline")
-        widgets = theme.widgets
-        self.assertEqual(2, len(theme.widgets))
-        self.assertEqual("a.com", widgets[0].config)
+        self.assertEqual(3, len(theme.widgets))
+        self.assertEqual("jsonfeed.org", widgets[0].config)
         self.assertEqual("turberfield.punchline", widgets[1].config)
+        self.assertEqual("a.com", widgets[2].config)
 
     def test_settings(self):
         cfg = Settings.config_parser()
