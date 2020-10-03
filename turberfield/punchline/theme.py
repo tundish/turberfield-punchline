@@ -54,8 +54,11 @@ Page = namedtuple(
 class Theme(Renderer):
 
     @staticmethod
-    def frame_path(location, page, ordinal):
-        return location.joinpath(page.scene_slug, f"{ordinal:03d}").with_suffix(".html")
+    def frame_path(location, frame, ordinal, fmt=None):
+        if fmt:
+            return location.joinpath(Theme.slug(frame["scene"]), fmt.format(ordinal)).with_suffix(".html")
+        else:
+            return location.joinpath(Theme.slug(frame["scene"]), Theme.slug(frame["name"])).with_suffix(".html")
 
     @staticmethod
     def slug(text, table="".maketrans({i: i for i in string.ascii_letters + string.digits + "_-"})):
@@ -116,20 +119,24 @@ class Theme(Renderer):
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
-        show_nav = not any (i for i in self.handlers if i.split(".")[0] == page.path.stem)
+        nodes = next(reversed(metadata["nodes"]), "")
+        show_nav = not any(i for i in self.handlers if i.split(".")[0] == page.path.stem)
         for n, frame in enumerate(presenter.frames):
             frame = presenter.animate(frame, dwell, pause, react=True)
             text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
-
-            next_frame = self.frame_path(self.output, page, n + 1).relative_to(self.output).as_posix()
             body = "\n".join(itertools.chain(
                 (self.render_frame_to_html(
                     frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1) and show_nav
                 ), ),
                 fragments["body"])
             )
+
+            next_frame = self.frame_path(
+                self.output, presenter.frames[n + 1], n + 1, fmt=nodes
+            ).relative_to(self.output).as_posix() if n < len(presenter.frames) -1 else None
+
             html = self.render_body_html(
-                next_= next_frame if n < len(presenter.frames) -1 else None,
+                next_= next_frame,
                 refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
                 title=page.title.capitalize(),
             ).format(
@@ -138,7 +145,7 @@ class Theme(Renderer):
                 body
             )
 
-            path = self.frame_path(self.output, page, n)
+            path = self.frame_path(self.output, frame, n, fmt=nodes)
             yield page._replace(ordinal=n, text=text, html=html, path=path)
 
     @property

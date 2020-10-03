@@ -100,10 +100,11 @@ class Presenter:
             )
             frame[Model.Audio] = list(self.animate_audio(frame[Model.Audio]))
             frame[Model.Still] = list(self.animate_stills(frame[Model.Still]))
-            # TODO: remove
             for p in frame[Model.Property]:
                 if react and p.object is not None:
                     setattr(p.object, p.attr, p.val)
+
+            # TODO: remove
             for m in frame[Model.Memory]:
                 if react and m.object is None:
                     m.subject.set_state(m.state)

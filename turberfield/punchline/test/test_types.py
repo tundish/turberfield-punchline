@@ -56,3 +56,30 @@ class SettingsTests(unittest.TestCase):
         settings = Settings(**self.cfg["theme"])
         self.assertEqual("hsl(37, 93%, 12%, 0.7)", settings.shadows)
 
+    def test_stateful(self):
+        text = textwrap.dedent("""
+        .. entity:: THEME_SETTINGS
+
+        Scene
+        =====
+
+        one
+        ---
+
+        .. property:: THEME_SETTINGS.punchline-states-refresh none
+
+        two
+        ---
+
+        .. property:: THEME_SETTINGS.punchline-states-refresh initial
+
+        """)
+        uid = uuid.uuid4()
+        theme = type("Fake", (), {})()
+        theme.settings = Settings(id=uid)
+        script = SceneScript("inline", doc=SceneScript.read(text))
+        script.cast(script.select([theme.settings]))
+        model = ModelAssignsStrings(script.fP, script.doc)
+        script.doc.walkabout(model)
+        presenter = Presenter(model)
+        print(vars(theme.settings))

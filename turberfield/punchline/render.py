@@ -27,6 +27,8 @@ punchline-spoken
     A region to be animated as if spoken (may include images, icons, etc)
 punchline-colour-shadows
     A reference to a theme-specific colour variable.
+punchline-states-refresh
+    The current setting for page refresh mode
 
 """
 
