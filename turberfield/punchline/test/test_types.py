@@ -6,8 +6,11 @@ import uuid
 
 from turberfield.dialogue.model import Model
 from turberfield.dialogue.model import SceneScript
+
 from turberfield.punchline.build import Build
 from turberfield.punchline.build import ModelAssignsStrings
+from turberfield.punchline.presenter import Presenter
+from turberfield.punchline.theme import Theme
 from turberfield.punchline.types import Settings
 
 
@@ -56,7 +59,7 @@ class SettingsTests(unittest.TestCase):
         settings = Settings(**self.cfg["theme"])
         self.assertEqual("hsl(37, 93%, 12%, 0.7)", settings.shadows)
 
-    def test_stateful(self):
+    def test_set_refresh_enabled(self):
         text = textwrap.dedent("""
         .. entity:: THEME_SETTINGS
 
@@ -71,15 +74,17 @@ class SettingsTests(unittest.TestCase):
         two
         ---
 
-        .. property:: THEME_SETTINGS.punchline-states-refresh initial
+        .. property:: THEME_SETTINGS.punchline-states-refresh inherit
 
         """)
-        uid = uuid.uuid4()
-        theme = type("Fake", (), {})()
-        theme.settings = Settings(id=uid)
+        theme = Theme()
         script = SceneScript("inline", doc=SceneScript.read(text))
         script.cast(script.select([theme.settings]))
         model = ModelAssignsStrings(script.fP, script.doc)
         script.doc.walkabout(model)
         presenter = Presenter(model)
-        print(vars(theme.settings))
+        self.assertEqual(2, len(presenter.frames))
+        presenter.animate(presenter.frames[0])
+        self.assertFalse(theme.is_refresh_enabled)
+        presenter.animate(presenter.frames[1])
+        self.assertTrue(theme.is_refresh_enabled)

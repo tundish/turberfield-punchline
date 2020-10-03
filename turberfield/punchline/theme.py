@@ -112,6 +112,10 @@ class Theme(Renderer):
     def widgets(self):
         return [i for i in Widget.catalogue if not (i.optional and i.config not in self.cfg)]
 
+    @property
+    def is_refresh_enabled(self):
+        return getattr(self.settings, "punchline-states-refresh", "").lower() != "none"
+
     def expand(self, page, *args, fragments=[], **kwargs):
         presenter = Presenter(page.model)
         fragments = {key: filter(None, values) for key, *values in zip(Widget.Fragment._fields, *fragments)}
@@ -120,20 +124,24 @@ class Theme(Renderer):
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
         nodes = next(reversed(metadata["nodes"]), "")
-        show_nav = not any(i for i in self.handlers if i.split(".")[0] == page.path.stem)
+        has_nav = not any(i for i in self.handlers if i.split(".")[0] == page.path.stem)
         for n, frame in enumerate(presenter.frames):
             frame = presenter.animate(frame, dwell, pause, react=True)
             text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
+
+            if self.is_refresh_enabled and n < len(presenter.frames) - 1:
+                next_frame = self.frame_path(
+                    self.output, presenter.frames[n + 1], n + 1, fmt=nodes
+                ).relative_to(self.output).as_posix()
+            else:
+                next_frame = None
+
             body = "\n".join(itertools.chain(
                 (self.render_frame_to_html(
-                    frame, title=page.title.capitalize(), final=(n == len(presenter.frames) - 1) and show_nav
+                    frame, title=page.title.capitalize(), final=(next_frame is None and has_nav)
                 ), ),
                 fragments["body"])
             )
-
-            next_frame = self.frame_path(
-                self.output, presenter.frames[n + 1], n + 1, fmt=nodes
-            ).relative_to(self.output).as_posix() if n < len(presenter.frames) -1 else None
 
             html = self.render_body_html(
                 next_= next_frame,
@@ -157,12 +165,7 @@ class Theme(Renderer):
         }
 
     def cover(self, page, feeds: dict, tags: dict, *args, **kwargs):
-        """
-        Nav: tag cloud and article list
-        Article: Summary view of article
-
-        """
-        logging.info("Handling {0}".format(page))
+        logging.info("Found handler for {0.path}".format(page))
         fragments = [Widget.Fragment(
             head="\n".join([
                 '<link rel="alternate" type="application/json" title="{feed_title}" href="{feed_url}" />'.format(
