@@ -203,7 +203,7 @@ necessary the JSON feed output.
 
 The interface is still in development, and is not documented just now.
 
-In the meantime, for rebranding and layout changes, please edit the local copy of *bfost.css* after your site
+In the meantime, for rebranding and layout changes, please edit the local copy of *punchline.css* after your site
 is rendered in the default theme.
 
 If all you need to change are the colours, you can achieve that with a modification to the *.cfg* file.
