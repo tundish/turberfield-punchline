@@ -28,7 +28,7 @@ User Guide
 Example
 =======
 
-If you want to see this example working on your PC, follow the steps for installation_ first.
+The following example is taken from ``questions.rst`` in the source repository.
 
 .. code:: rest
 
@@ -117,6 +117,8 @@ If you want to see this example working on your PC, follow the steps for install
 Guide
 =====
 
+If you want to see the previous example working on your PC, follow the steps for installation_ first.
+
 Punchline dialogue is written in reStructuredText_ and incorporates the extensions from the 
 `Turberfield dialogue library`_.
 
@@ -158,6 +160,16 @@ Eg::
     :feed: coding
 
 Any dialogue without such attributes will appear in the *all* feed.
+
+Presentation
+------------
+
+You can change the timing of the text animation. ``dwell`` is the time in seconds per word. ``pause`` is the
+number of seconds delay after each delivered line::
+
+
+    :dwell: 0.2
+    :pause: 0.5
 
 Config file
 -----------
