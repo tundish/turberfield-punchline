@@ -143,7 +143,6 @@ font-size: 1.3rem;
 }
 
 .punchline-spoken blockquote > header:empty + p {
-font-variant: small-caps;
 letter-spacing: 0.125rem;
 }
 
@@ -197,6 +196,18 @@ p {
 padding-left: 1rem;
 }
 
+em {
+font-style: italic;
+}
+
+pre {
+font-variant: small-caps;
+}
+
+strong {
+font-weight: bolder;
+}
+
 img {
 padding: 0.35rem 0.7rem 0.35rem 0.7rem;
 width: 100%;
@@ -210,14 +221,14 @@ padding: 0.5em;
 }
 
 li a {
-border: 1px solid var(--punchline-colour-whiteout, whitesmoke);
+border: 1px solid var(--punchline-colour-washout, whitesmoke);
 font-size: 1.8rem;
 margin: 0.5rem 0 0.5rem 0;
 }
 
 li a:hover {
-border: 1px dashed var(--punchline-colour-shadows, grey);
-color: var(--punchline-colour-glamour, steelblue);
+background-color: var(--punchline-colour-shadows, grey);
+color: var(--punchline-colour-washout, whitesmoke);
 }
 
 

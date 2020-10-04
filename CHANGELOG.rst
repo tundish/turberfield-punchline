@@ -16,6 +16,8 @@ Extensive refactoring of the Theme class and public API.
 * Removed the `--theme` option. It is now set in the default section
   of the config file.
 * Namespaced the variables used in styling themes.
+* Added a `node` metadata field to control frame naming.
+* Added the `punchline-states-refresh` setting to control interframe refresh.
 
 0.3.0
 =====

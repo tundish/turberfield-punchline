@@ -2,7 +2,7 @@
 :view_at:   2020-09-19
 :author:    tundish
 :dwell:     0.6
-:pause:     3.0
+:pause:     0.2
 
 Index
 =====
@@ -10,7 +10,7 @@ Index
 1
 -
 
-Hello.
+This text appears before the contents of your Punchline blog.
 
-World.
+You can change it in the file *index.rst*.
 
