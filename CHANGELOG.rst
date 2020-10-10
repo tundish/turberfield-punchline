@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.6.0
+=====
+
+* `Raw` HTML declarations are now permitted in dialogue.
+
 0.5.0
 =====
 

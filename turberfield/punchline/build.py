@@ -45,6 +45,12 @@ class ModelAssignsStrings(Model):
         val = re.compile("\|(\w+)\|").sub(self.substitute_property, node["arguments"][1])
         self.shots[-1].items.append(Model.Property(self.speaker, entity.persona, attr, val))
 
+    def depart_raw(self, node):
+        if "html" in node.attributes["format"] and self.shots:
+            if self.shots[-1].items:
+                line = self.shots[-1].items[-1]
+                self.shots[-1].items[-1] = line._replace(html=line.html + "\n" + node.astext())
+
 
 class Build:
 
@@ -73,6 +79,10 @@ class Build:
     def build_model(text, theme, uid=None, path:pathlib.Path=None, model_type=ModelAssignsStrings):
         theme.settings.id = uid or theme.settings.id
         path = path or pathlib.Path(".")
+        SceneScript.settings.raw_enabled = True
+        SceneScript.settings.file_insertion_enabled = True
+        SceneScript.settings.input_encoding = "utf-8"
+        SceneScript.settings.input_encoding_error_handler = "replace"
         script = SceneScript(path, doc=SceneScript.read(text))
         ensemble = list(Eponymous.create(script)) + [theme.settings]
         script.cast(script.select(ensemble))
