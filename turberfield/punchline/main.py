@@ -68,6 +68,7 @@ def main(args):
     logging.info("Using config file at {0}".format(args.config))
 
     output = args.output or args.inputs[0].joinpath("output")
+    sys.path.append(str(args.config.parent.resolve()))
     theme = Build.find_theme(cfg, output=output)
     if not theme:
         logging.critical("No theme found.")

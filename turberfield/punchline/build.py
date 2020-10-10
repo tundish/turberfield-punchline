@@ -117,7 +117,7 @@ class Build:
                 if inspect.isclass(i) and issubclass(i, Theme)
                 and inspect.getmodule(i) is theme_module
             )
-            logging.info("Selected {0.__name__} theme from '{1}'".format(theme_class, name))
+            logging.info("Selected {0.__name__} theme from '{1}' module.".format(theme_class, name))
         except (ModuleNotFoundError, StopIteration):
             themes = dict(gather_installed("turberfield.interfaces.theme"))
             theme_class = themes.get(name) or themes.get(default)

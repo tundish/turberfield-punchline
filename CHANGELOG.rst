@@ -11,6 +11,7 @@ Change Log
 
 * Added a simpler banner font; Tenderness.
 * Fixed a bug with the default config file.
+* Fixed a bug with theme module search paths.
 
 0.4.0
 =====
