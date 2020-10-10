@@ -43,7 +43,7 @@ def parser():
     with importlib.resources.path("turberfield.punchline", "default.cfg") as default_config_path:
         rv.add_argument(
             "--config", type=pathlib.Path,
-            default=default_config_path, help="Specify one or more site configurations."
+            default=default_config_path, help="Specify a site configuration file."
         )
     rv.add_argument(
         "inputs", nargs="+", type=pathlib.Path,
