@@ -42,9 +42,8 @@ def parser():
     rv = argparse.ArgumentParser()
     with importlib.resources.path("turberfield.punchline", "default.cfg") as default_config_path:
         rv.add_argument(
-            "--config", action="append", type=pathlib.Path,
-            default=[default_config_path],
-            help="Specify one or more site configurations."
+            "--config", type=pathlib.Path,
+            default=default_config_path, help="Specify one or more site configurations."
         )
     rv.add_argument(
         "inputs", nargs="+", type=pathlib.Path,
@@ -63,58 +62,57 @@ def main(args):
         level=logging.INFO
     )
     logging.info("Running Punchline")
-    for cfg_path in args.config:
-        cfg = Settings.config_parser()
-        cfg.read(cfg_path)
-        # logging.config.fileConfig(cfg, disable_existing_loggers=False)
-        logging.info("Using config file at {0}".format(cfg_path))
+    cfg = Settings.config_parser()
+    cfg.read(args.config)
+    # logging.config.fileConfig(cfg, disable_existing_loggers=False)
+    logging.info("Using config file at {0}".format(args.config))
 
-        output = args.output or args.inputs[0].joinpath("output")
-        theme = Build.find_theme(cfg, output=output)
-        if not theme:
-            logging.critical("No theme found.")
-            return 1
+    output = args.output or args.inputs[0].joinpath("output")
+    theme = Build.find_theme(cfg, output=output)
+    if not theme:
+        logging.critical("No theme found.")
+        return 1
 
-        for path in args.inputs:
-            articles = list(Build.filter_pages(Build.find_articles(path, theme), theme))
+    for path in args.inputs:
+        articles = list(Build.filter_pages(Build.find_articles(path, theme), theme))
 
-        feeds = {f: set() for p in articles for f in p.feeds}
-        tags = {t: set() for p in articles for t in p.tags}
-        tally = Counter()
-        with theme as writer:
-            for article in articles:
-                handler = writer.handlers.get(article.path.name, writer.expand)
-                for page in handler(article, feeds, tags, output=output.resolve()):
-                    page.path.parent.mkdir(parents=True, exist_ok=True)
-                    page.path.write_text(page.html)
-                    for feed_name in page.feeds:
-                        feeds[feed_name].add(page)
-                    for tag_name in page.tags:
-                        tags[tag_name].add(page)
-                tally[handler] += 1
+    feeds = {f: set() for p in articles for f in p.feeds}
+    tags = {t: set() for p in articles for t in p.tags}
+    tally = Counter()
+    with theme as writer:
+        for article in articles:
+            handler = writer.handlers.get(article.path.name, writer.expand)
+            for page in handler(article, feeds, tags, output=output.resolve()):
+                page.path.parent.mkdir(parents=True, exist_ok=True)
+                page.path.write_text(page.html)
+                for feed_name in page.feeds:
+                    feeds[feed_name].add(page)
+                for tag_name in page.tags:
+                    tags[tag_name].add(page)
+            tally[handler] += 1
 
-            n_articles = tally[theme.expand]
-            logging.info("Processed {0} article{1}.".format(n_articles, "" if n_articles == 1 else "s"))
+        n_articles = tally[theme.expand]
+        logging.info("Processed {0} article{1}.".format(n_articles, "" if n_articles == 1 else "s"))
 
-            n_pages = len({page for pages in feeds.values() for page in pages})
-            logging.info("Rendered {0} page{1}.".format(n_pages, "" if n_pages == 1 else "s"))
+        n_pages = len({page for pages in feeds.values() for page in pages})
+        logging.info("Rendered {0} page{1}.".format(n_pages, "" if n_pages == 1 else "s"))
 
-            n_covers = sum(tally.values()) - n_articles
-            logging.info("Created {0} cover page{1}.".format(n_covers, "" if n_covers == 1 else "s"))
+        n_covers = sum(tally.values()) - n_articles
+        logging.info("Created {0} cover page{1}.".format(n_covers, "" if n_covers == 1 else "s"))
 
-            # Write feed output
-            for n, (feed_name, pages) in enumerate(feeds.items()):
-                settings = theme.get_feed_settings(feed_name)
-                feed = writer.publish(pages, **settings)
-                feed_path = theme.output.joinpath(
-                    settings.getpath("feed_url").relative_to(settings.getpath("feed_url").anchor)
-                )
-                feed_path.parent.mkdir(parents=True, exist_ok=True)
-                feed_path.write_text(json.dumps(feed, indent=0))
+        # Write feed output
+        for n, (feed_name, pages) in enumerate(feeds.items()):
+            settings = theme.get_feed_settings(feed_name)
+            feed = writer.publish(pages, **settings)
+            feed_path = theme.output.joinpath(
+                settings.getpath("feed_url").relative_to(settings.getpath("feed_url").anchor)
+            )
+            feed_path.parent.mkdir(parents=True, exist_ok=True)
+            feed_path.write_text(json.dumps(feed, indent=0))
 
-            logging.info("Compiled {0} feed{1}.".format(n + 1, "" if not n else "s"))
+        logging.info("Compiled {0} feed{1}.".format(n + 1, "" if not n else "s"))
 
-        logging.info("Wrote output to {0}".format(theme.output))
+    logging.info("Wrote output to {0}".format(theme.output))
 
     return 0
 

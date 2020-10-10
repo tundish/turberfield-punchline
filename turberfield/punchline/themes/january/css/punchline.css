@@ -32,6 +32,13 @@ src: local("Bernier Shade"), local("BernierShade-Regular"),
 font-weight: 100 950;
 }
 
+@font-face {
+font-family: "Tenderness";
+src: local("Tenderness"), local("Tenderness-Regular"),
+    url(/fonts/Tenderness.otf) format("opentype");
+font-weight: 100 950;
+}
+
 /*  Grid and Flex */
 
 body {
@@ -48,7 +55,7 @@ height: 100vh;
 .punchline-banner {
 background-color: var(--punchline-colour-washout, whitesmoke);
 border-left: 0.25rem solid var(--punchline-colour-shadows, grey);
-color: var(--punchline-colour-midtone silver);
+color: var(--punchline-colour-midtone, silver);
 font-family: var(--titles);
 grid-area: banner;
 padding-left: 1.0rem;

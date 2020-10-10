@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.5.0
+=====
+
+* Added a simpler banner font; Tenderness.
+* Fixed a bug with the default config file.
+
 0.4.0
 =====
 

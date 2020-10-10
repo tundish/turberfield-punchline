@@ -30,8 +30,8 @@ class January(Theme):
     @property
     def definitions(self):
         return {
-            "titles": '"Bernier Shade", sans-serif',
-            "blocks": '"Bernier Regular", sans-serif',
+            "titles": "Tenderness, sans-serif",
+            "blocks": "Tenderness, sans-serif",
             "mono": ", ".join([
                 "SFMono-Regular", "Menlo", "Monaco",
                 "Consolas", '"Liberation Mono"',
