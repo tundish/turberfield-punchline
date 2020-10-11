@@ -124,23 +124,25 @@ class Theme(Renderer):
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
         nodes = next(reversed(metadata["nodes"]), "")
-        has_nav = not any(i for i in self.handlers if i.split(".")[0] == page.path.stem)
+        has_backnav = (
+            n == len(presenter.frames) - 1
+            and not any(i for i in self.handlers if i.split(".")[0] == page.path.stem)
+        )
         for n, frame in enumerate(presenter.frames):
             frame = presenter.animate(frame, dwell, pause, react=True)
             text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
 
-            if self.refresh_target == "none":
-                next_frame = None
-            elif self.refresh_target == "inherit" and n < len(presenter.frames) - 1:
+            next_frame = None
+            if self.refresh_target == "inherit" and not has_backnav:
                 next_frame = self.frame_path(
                     self.output, presenter.frames[n + 1], n + 1, fmt=nodes
                 ).relative_to(self.output).as_posix()
-            else:
+            elif self.refresh_target not in ("inherit", "none"):
                 next_frame = pathlib.Path(self.refresh_target).as_posix()
 
             body = "\n".join(itertools.chain(
                 (self.render_frame_to_html(
-                    frame, title=page.title.capitalize(), final=(next_frame is None and has_nav)
+                    frame, title=page.title.capitalize(), final=(has_backnav and (next_frame or "/"))
                 ), ),
                 fragments["body"])
             )

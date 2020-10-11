@@ -67,7 +67,7 @@ preload="auto" {'loop="loop"' if anim.element.loop and int(anim.element.loop) > 
 
 
     @staticmethod
-    def render_frame_to_html(frame, ensemble=[], title="", final=False):
+    def render_frame_to_html(frame, ensemble=[], title="", final=""):
         heading = " ".join("<span>{0}</span>".format(i.capitalize()) for i in title.split(" "))
         dialogue = "\n".join(Renderer.animated_line_to_html(i) for i in frame[Model.Line])
         stills = "\n".join(Renderer.animated_still_to_html(i) for i in frame[Model.Still])
@@ -90,7 +90,7 @@ preload="auto" {'loop="loop"' if anim.element.loop and int(anim.element.loop) > 
 <nav>
 <ul>
 <li style="animation-delay: {last.delay:.2f}s; animation-duration: {last.duration:.2f}s">
-<form role="form" action="/" method="GET" name="contents">
+<form role="form" action="{final}" method="GET" name="contents">
 {'<button action="submit">Home</button>' if final else ''}
 </form></li>
 </ul>
