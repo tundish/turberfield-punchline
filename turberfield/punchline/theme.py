@@ -142,7 +142,7 @@ class Theme(Renderer):
 
             body = "\n".join(itertools.chain(
                 (self.render_frame_to_html(
-                    frame, title=page.title.capitalize(), final=(has_backnav and (next_frame or "/"))
+                    frame, title=page.title.capitalize(), backnav=(has_backnav and (next_frame or "/"))
                 ), ),
                 fragments["body"])
             )
