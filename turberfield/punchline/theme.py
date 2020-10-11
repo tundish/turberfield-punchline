@@ -124,11 +124,11 @@ class Theme(Renderer):
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
         nodes = next(reversed(metadata["nodes"]), "")
-        has_backnav = (
-            n == len(presenter.frames) - 1
-            and not any(i for i in self.handlers if i.split(".")[0] == page.path.stem)
-        )
         for n, frame in enumerate(presenter.frames):
+            has_backnav = (
+                n == len(presenter.frames) - 1
+                and not any(i for i in self.handlers if i.split(".")[0] == page.path.stem)
+            )
             frame = presenter.animate(frame, dwell, pause, react=True)
             text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
 
