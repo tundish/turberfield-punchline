@@ -136,7 +136,7 @@ class Theme(Renderer):
                     self.output, presenter.frames[n + 1], n + 1, fmt=nodes
                 ).relative_to(self.output).as_posix()
             else:
-                next_frame = self.refresh_target
+                next_frame = pathlib.Path(self.refresh_target).as_posix()
 
             body = "\n".join(itertools.chain(
                 (self.render_frame_to_html(
