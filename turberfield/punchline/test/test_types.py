@@ -85,6 +85,6 @@ class SettingsTests(unittest.TestCase):
         presenter = Presenter(model)
         self.assertEqual(2, len(presenter.frames))
         presenter.animate(presenter.frames[0])
-        self.assertFalse(theme.is_refresh_enabled)
+        self.assertEqual("none", theme.refresh_target)
         presenter.animate(presenter.frames[1])
-        self.assertTrue(theme.is_refresh_enabled)
+        self.assertEqual("inherit", theme.refresh_target)

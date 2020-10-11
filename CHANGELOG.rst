@@ -10,6 +10,7 @@ Change Log
 =====
 
 * `Raw` HTML declarations are now permitted in dialogue.
+* The setting `punchline-states-refresh` may now be a URL.
 
 0.5.0
 =====

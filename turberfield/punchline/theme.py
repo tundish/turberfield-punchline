@@ -113,8 +113,8 @@ class Theme(Renderer):
         return [i for i in Widget.catalogue if not (i.optional and i.config not in self.cfg)]
 
     @property
-    def is_refresh_enabled(self):
-        return getattr(self.settings, "punchline-states-refresh", "").lower() != "none"
+    def refresh_target(self):
+        return getattr(self.settings, "punchline-states-refresh", "inherit").lower()
 
     def expand(self, page, *args, fragments=[], **kwargs):
         presenter = Presenter(page.model)
@@ -129,12 +129,14 @@ class Theme(Renderer):
             frame = presenter.animate(frame, dwell, pause, react=True)
             text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
 
-            if self.is_refresh_enabled and n < len(presenter.frames) - 1:
+            if self.refresh_target == "none":
+                next_frame = None
+            elif self.refresh_target == "inherit" and n < len(presenter.frames) - 1:
                 next_frame = self.frame_path(
                     self.output, presenter.frames[n + 1], n + 1, fmt=nodes
                 ).relative_to(self.output).as_posix()
             else:
-                next_frame = None
+                next_frame = self.refresh_target
 
             body = "\n".join(itertools.chain(
                 (self.render_frame_to_html(
