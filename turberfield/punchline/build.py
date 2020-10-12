@@ -51,6 +51,10 @@ class ModelAssignsStrings(Model):
                 line = self.shots[-1].items[-1]
                 self.shots[-1].items[-1] = line._replace(html=line.html + "\n" + node.astext())
 
+    def visit_citation_reference(self, node):
+        entity = self.get_entity(node.attributes["refname"])
+        self.speaker = entity and entity.persona
+
 
 class Build:
 

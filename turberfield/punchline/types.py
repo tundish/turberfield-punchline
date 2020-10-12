@@ -30,9 +30,11 @@ class Eponymous(Persona):
 
     @classmethod
     def create(cls, script):
+        full_name = "{0}.{1}".format(cls.__module__, cls.__qualname__)
         entities = group_by_type(script.doc)[Entity.Declaration]
         for entity in entities:
-            yield cls(name=cls.name_from_entity(entity))
+            if full_name in entity.get("options", {}).get("types", []):
+                yield cls(name=cls.name_from_entity(entity))
 
 
 class Settings(DataObject):

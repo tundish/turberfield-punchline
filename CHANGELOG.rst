@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.7.0
+=====
+
+* Fixed a bug in creating Eponymous classes.
+
 0.6.0
 =====
 
