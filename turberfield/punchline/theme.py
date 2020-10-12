@@ -118,7 +118,7 @@ class Theme(Renderer):
 
     def expand(self, page, *args, fragments=[], **kwargs):
         presenter = Presenter(page.model)
-        fragments = {key: filter(None, values) for key, *values in zip(Widget.Fragment._fields, *fragments)}
+        fragments = {key: list(filter(None, values)) for key, *values in zip(Widget.Fragment._fields, *fragments)}
 
         metadata = Site.multidict(page.model.metadata)
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))

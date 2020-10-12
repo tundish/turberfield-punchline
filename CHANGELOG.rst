@@ -10,6 +10,7 @@ Change Log
 =====
 
 * Fixed a bug in creating Eponymous classes.
+* Fixed a bug in rendering widgets.
 
 0.6.0
 =====
