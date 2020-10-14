@@ -106,7 +106,7 @@ def main(args):
             settings = theme.get_feed_settings(feed_name)
             feed = writer.publish(pages, **settings)
             feed_path = theme.output.joinpath(
-                settings.getpath("feed_url").relative_to(settings.getpath("feed_url").anchor)
+                settings.getpath("feed_url").relative_to(settings.getpath("site_url"))
             )
             feed_path.parent.mkdir(parents=True, exist_ok=True)
             feed_path.write_text(json.dumps(feed, indent=0))

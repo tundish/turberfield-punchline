@@ -11,6 +11,7 @@ Change Log
 
 * Fixed a bug in creating Eponymous classes.
 * Fixed a bug in rendering widgets.
+* Fixed the path used by feed from config.
 
 0.6.0
 =====
