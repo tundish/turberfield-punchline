@@ -120,16 +120,16 @@ preload="auto" {'loop="loop"' if anim.element.loop and int(anim.element.loop) > 
 
     @staticmethod
     @functools.lru_cache()
-    def render_body_html(title="", refresh=None, next_=""):
+    def render_body_html(title="", refresh=None, next_="", site_url="/"):
         return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{'<meta http-equiv="refresh" content="{0};/{1}">'.format(refresh, next_) if refresh and next_ else ''}
+{'<meta http-equiv="refresh" content="{0};{1}">'.format(refresh, next_) if refresh and next_ else ''}
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>{title}</title>
-<link rel="stylesheet" href="/css/punchline.css" />
+<link rel="stylesheet" href="{site_url}css/punchline.css" />
 {{0}}
 </head>
 <body>

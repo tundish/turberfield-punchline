@@ -12,6 +12,7 @@ Change Log
 * Fixed a bug in creating Eponymous classes.
 * Fixed a bug in rendering widgets.
 * Fixed the path used by feed from config.
+* Added `site_mod` mechanism to optionally modify URLs.
 
 0.6.0
 =====

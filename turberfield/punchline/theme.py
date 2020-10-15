@@ -136,7 +136,7 @@ class Theme(Renderer):
             if self.refresh_target == "inherit" and not has_backnav:
                 next_frame = self.frame_path(
                     self.output, presenter.frames[n + 1], n + 1, fmt=nodes
-                ).relative_to(self.output).as_posix()
+                ).name
             elif self.refresh_target not in ("inherit", "none"):
                 next_frame = pathlib.Path(self.refresh_target).as_posix()
 
@@ -151,11 +151,15 @@ class Theme(Renderer):
                 next_= next_frame,
                 refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
                 title=page.title.capitalize(),
+                site_url=self.cfg["theme"]["site_url"]
             ).format(
                 "\n".join(fragments["head"]),
                 self.render_dict_to_css(vars(self.settings)),
                 body
             )
+
+            if "site_mod" in self.cfg["theme"]:
+                html = html.replace(self.cfg["theme"]["site_url"], self.cfg["theme"]["site_mod"])
 
             path = self.frame_path(self.output, frame, n, fmt=nodes)
             yield page._replace(ordinal=n, text=text, html=html, path=path)
