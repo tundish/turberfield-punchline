@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.8.0
+=====
+
+* Back navigation uses ``site_url``.
+
 0.7.0
 =====
 

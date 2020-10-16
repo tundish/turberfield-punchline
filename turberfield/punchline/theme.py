@@ -124,6 +124,7 @@ class Theme(Renderer):
         dwell = float(next(reversed(metadata["dwell"]), "0.3"))
         pause = float(next(reversed(metadata["pause"]), "1.0"))
         nodes = next(reversed(metadata["nodes"]), "")
+        site_url = self.cfg["theme"]["site_url"]
         for n, frame in enumerate(presenter.frames):
             has_backnav = (
                 n == len(presenter.frames) - 1
@@ -142,7 +143,7 @@ class Theme(Renderer):
 
             body = "\n".join(itertools.chain(
                 (self.render_frame_to_html(
-                    frame, title=page.title.capitalize(), backnav=(has_backnav and (next_frame or "/"))
+                    frame, title=page.title.capitalize(), backnav=(has_backnav and (next_frame or site_url))
                 ), ),
                 fragments["body"])
             )
@@ -151,7 +152,7 @@ class Theme(Renderer):
                 next_= next_frame,
                 refresh=Presenter.refresh_animations(frame) if presenter.pending else None,
                 title=page.title.capitalize(),
-                site_url=self.cfg["theme"]["site_url"]
+                site_url=site_url
             ).format(
                 "\n".join(fragments["head"]),
                 self.render_dict_to_css(vars(self.settings)),
@@ -159,7 +160,7 @@ class Theme(Renderer):
             )
 
             if "site_mod" in self.cfg["theme"]:
-                html = html.replace(self.cfg["theme"]["site_url"], self.cfg["theme"]["site_mod"])
+                html = html.replace(site_url, self.cfg["theme"]["site_mod"])
 
             path = self.frame_path(self.output, frame, n, fmt=nodes)
             yield page._replace(ordinal=n, text=text, html=html, path=path)
