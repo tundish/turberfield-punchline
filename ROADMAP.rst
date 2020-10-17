@@ -40,7 +40,7 @@ see how this would work in practice. So there's going to be some refinement of t
 Bug fixes
 =========
 
-If you'd like me to fix something specific, please `log an issue`_ and I'll make that a
+If you'd like me to fix something specific, please `log an issue`_ and I'll make it a
 priority.
 
 .. _Punchline: https://pypi.org/project/turberfield-punchline/
