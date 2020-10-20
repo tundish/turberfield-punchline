@@ -1,21 +1,18 @@
 ..  Titling
     ##++::==~~--''``
 
-Turberfield Dialogue library
-++++++++++++++++++++++++++++
+Punchline
++++++++++
 
 .. toctree::
    :maxdepth: 1
 
    intro
+   dialogue
+   widgets
+   themes
    install
-   battle
-   syntax
-   cloak
-   cli
-   api
-   publishing
-   performing
+   roadmap
    changes
 
 * :ref:`genindex`
