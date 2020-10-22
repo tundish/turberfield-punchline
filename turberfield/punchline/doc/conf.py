@@ -11,8 +11,17 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-# import sys
+import sys
 # sys.path.insert(0, os.path.abspath('.'))
+
+try:
+    import pkg_resources
+    sys.path.append(os.path.abspath(os.path.join(
+        pkg_resources.resource_filename("turberfield-punchline", ""),
+        "..", "..")
+    ))
+except ImportError:
+    sys.path.append(os.path.abspath(os.path.join("..", "..", "..")))
 
 
 import turberfield.punchline
