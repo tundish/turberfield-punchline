@@ -113,8 +113,8 @@ a `Settings` object for you:
 Property
 --------
 
-A Property directive lets you access useful data held in Python objects. You can use those values in substitution
-references, or you can modify them from your dialogue.
+A Property directive lets you access useful data held in Python objects. You can use those values in
+`substitution definitions`_, or you can modify them from your dialogue.
 
 A good example of this is theme settings. Suppose you want to change the colours to suit some narrative mood.
 You can set a value for a colour attribute like so:
@@ -141,10 +141,10 @@ file path to it. Punchline recognises different file suffixes and will render th
 The `offset` and `duration` parameters are optional. They control the animation time of images in milliseconds.
 
 Citations
----------
+=========
 
 Punchline employs this core feature of reStructuredText_ as a way of representing a screenplay. So long as the
-entity_ has been declared, you define character dialogue like this:
+entity_ has been declared, you can define character dialogue like this:
 
 .. code:: rest
 
@@ -166,3 +166,4 @@ The following example is taken from ``questions.rst`` in the source repository.
 .. _reStructuredText: https://docutils.sourceforge.io/docs/user/rst/quickref.html
 .. _directives: https://turberfield-dialogue.readthedocs.io/en/latest/syntax.html#elements
 .. _format string: https://docs.python.org/3/library/string.html#formatstrings
+.. _substitution definitions: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#substitution-definitions

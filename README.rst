@@ -22,6 +22,17 @@ measured timing. It supports multimedia too.
 Punchline was designed from the ground up to generate `JSON Feed`_. So you can publish your blog as a feed
 under the topics you choose.
 
+Usage
++++++
+
+:code:`punchline [-h] [--config CONFIG] [--output OUTPUT] inputs [inputs ...]`
+
+  *inputs*         One or more search paths.
+
+  -h, --help       Show a help message and exit.
+  --config CONFIG  Specify a site configuration file.
+  --output OUTPUT  Set directory for output.
+
 There is full `documentation online`_.
 
 .. _JSON Feed: https://jsonfeed.org/version/1.1
