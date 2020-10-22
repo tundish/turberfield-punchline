@@ -4,10 +4,47 @@
 Overview
 ::::::::
 
+Example
+=======
+
+Let's start with a bit of poetry. Below is a simple scrap of text, which you will find in `marina.rst` in
+the examples directory.
+
+`Rst` stands for `reStructuredText`_. It's a useful format for blogs, because it combines markup, metadata
+and readability.
+
+.. code:: rest
+
+    :author: T. S. Eliot
+
+    :dwell: 0.1
+    :pause: 1.5
+
+    Marina
+    ======
+
+    1
+    -
+
+    What seas what shores what grey rocks and what islands
+
+    What water lapping the bow
+
+    And scent of pine and woodthrush singing through the fog
+
+    What images return
+
+    O my daughter.
+
+At the top, above the main content you can see some metadata about the file. Then there is the title.
+There are two levels of titling in every Punchline file. The first is the title of the whole piece.
+Second level titling creates individual pages. Here there is only one page.
 
 The config file
 ===============
 
+The other component of your Punchline blog is the configuration (*.cfg*) file.
+ 
 Releasing content
 -----------------
 
@@ -103,3 +140,4 @@ Try adding the following section, and experimenting with the colour values::
     punchline-colour-glamour = hsl(76, 80%, 35%, 1.0)
     punchline-colour-gravity = hsl(36, 20%, 18%, 1.0)
 
+.. _reStructuredText: https://docutils.sourceforge.io/docs/user/rst/quickref.html

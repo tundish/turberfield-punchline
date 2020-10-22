@@ -134,7 +134,7 @@ class Theme(Renderer):
             text = "\n".join(itertools.chain((self.render_frame_to_text(frame), ), fragments["text"]))
 
             next_frame = None
-            if self.refresh_target == "inherit" and not has_backnav:
+            if self.refresh_target == "inherit" and not has_backnav and n < len(presenter.frames) - 1:
                 next_frame = self.frame_path(
                     self.output, presenter.frames[n + 1], n + 1, fmt=nodes
                 ).name

@@ -1,6 +1,8 @@
 Dialogue
 ::::::::
 
+There is a tidy way to write dialogue in a plain text format. It's called `reStructuredText`_.
+
 Example
 =======
 
@@ -90,4 +92,4 @@ The following example is taken from ``questions.rst`` in the source repository.
 
     .. _questions: https://en.wikipedia.org/wiki/Questions_(game)
 
-
+.. _resRtucturedText: https://docutils.sourceforge.io/docs/user/rst/quickref.html
