@@ -1,95 +1,66 @@
 Dialogue
 ::::::::
 
-There is a tidy way to write dialogue in a plain text format. It's called `reStructuredText`_.
+Field lists
+===========
+
+
+Releasing content
+-----------------
+
+You can use metadata to control when pages are published. Four fields are available for that.
+All are optional. All accept a date or timestamp string:
+
+made_at:
+    Captures the time you created the entry, eg: ``:made_at: 2020-08-29 14:16``
+
+edit_at:
+    Captures the time you last changed the entry, eg: ``:edit_at: 2020-08-29 10:03:22``
+
+view_at:
+    Specifies when you first want the entry to be seen, eg: ``:view_at: 2020-09-01``
+
+drop_at:
+    Specifies when you want the entry to be withdrawn, eg: ``:drop_at: 2020-09-30``
+
+
+Tags
+----
+
+You can use metadata to tag dialogue with whatever keywords you wish. You can add as many tags as you like
+to the metadata, eg::
+
+    :tag:   Python
+    :tag:   Linux
+
+Feeds
+-----
+
+You can create multiple feeds for your site by adding ``:feed:`` attributes to the metadata.
+Eg::
+
+    :feed: if
+    :feed: coding
+
+Any dialogue without such attributes will appear in the *all* feed.
+
+Presentation
+------------
+
+You can change the timing of the text animation. ``dwell`` is the time in seconds per word. ``pause`` is the
+number of seconds delay after each delivered line::
+
+
+    :dwell: 0.2
+    :pause: 0.5
 
 Example
 =======
 
 The following example is taken from ``questions.rst`` in the source repository.
 
-.. code:: rest
-
-    .. This is a comment. What follows is metadata
-
-    :made_at: 2020-08-29
-    :view_at: 2020-09-01
-    :author:  Tom Stoppard
-
-    .. Now we declare the voices used in the dialogue.
-
-    .. entity:: ROSENCRANTZ
-       :types: turberfield.punchline.types.Eponymous
-
-    .. entity:: GUILDENSTERN
-       :types: turberfield.punchline.types.Eponymous
-
-    .. Dialogue scripts have a top-level title. Think of it as the name of a theatrical scene.
-
-    The Game of Questions
-    =====================
-
-    .. Second-level titles represent shots in the scene. Here is the first of three.
-
-    First point
-    -----------
-
-    [ROSENCRANTZ]_
-
-        Do you want to play questions_?
-
-    [GUILDENSTERN]_
-
-        How do you play that?
-
-    [ROSENCRANTZ]_
-
-        You have to ask questions.
-
-    [GUILDENSTERN]_
-
-        Statement! One - Love.
-
-    Second point
-    ------------
-
-    [ROSENCRANTZ]_
-
-        Cheating!
-
-    [GUILDENSTERN]_
-
-        How?
-
-    [ROSENCRANTZ]_
-
-        I hadn't started yet.
-
-    [GUILDENSTERN]_
-
-        Statement! Two - Love.
-
-    Third point
-    -----------
-
-    [ROSENCRANTZ]_
-
-        Are you counting that?
-
-    [GUILDENSTERN]_
-
-        What?
-
-    [ROSENCRANTZ]_
-
-        Are you counting that?
-
-    [GUILDENSTERN]_
-
-        Foul! No repetitions.
-
-        Three - Love and Game.
-
-    .. _questions: https://en.wikipedia.org/wiki/Questions_(game)
+.. include:: ../examples/questions.rst
+    :literal:
+    :code: rest
 
 .. _resRtucturedText: https://docutils.sourceforge.io/docs/user/rst/quickref.html
