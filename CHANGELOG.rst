@@ -10,6 +10,7 @@ Change Log
 =====
 
 * Back navigation uses ``site_url``.
+* Added Sphinx/ReadTheDocs documentation
 
 0.7.0
 =====
