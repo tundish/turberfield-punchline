@@ -23,6 +23,10 @@ view_at:
 drop_at:
     Specifies when you want the entry to be withdrawn, eg: ``:drop_at: 2020-09-30``
 
+File naming
+-----------
+
+:nodes:     {0:02d}
 
 Tags
 ----
@@ -39,7 +43,7 @@ Feeds
 You can create multiple feeds for your site by adding ``:feed:`` attributes to the metadata.
 Eg::
 
-    :feed: if
+    :feed: poetry
     :feed: coding
 
 Any dialogue without such attributes will appear in the *all* feed.
@@ -54,6 +58,11 @@ number of seconds delay after each delivered line::
     :dwell: 0.2
     :pause: 0.5
 
+Directives
+==========
+
+Punchline supports all the directives_ provided by the Turberfield Dialogue library.
+
 Example
 =======
 
@@ -64,3 +73,4 @@ The following example is taken from ``questions.rst`` in the source repository.
     :code: rest
 
 .. _resRtucturedText: https://docutils.sourceforge.io/docs/user/rst/quickref.html
+.. _directives: https://turberfield-dialogue.readthedocs.io/en/latest/syntax.html#elements
