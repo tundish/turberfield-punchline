@@ -22,7 +22,7 @@ measured timing. It supports multimedia too.
 Punchline was designed from the ground up to generate `JSON Feed`_. So you can publish your blog as a feed
 under the topics you choose.
 
-There is a full `documentation online`_.
+There is full `documentation online`_.
 
 .. _JSON Feed: https://jsonfeed.org/version/1.1
 .. _web rings: https://www.mic.com/p/how-geocities-webrings-made-the-90s-internet-a-cozier-place-19638198

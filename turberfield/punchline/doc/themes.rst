@@ -33,3 +33,10 @@ Config
 
     [theme]
     site_mod = /
+
+Settings
+========
+
+::
+
+    .. property:: SETTINGS.punchline-states-refresh inherit
