@@ -47,7 +47,7 @@ grid-template-columns: 3fr 6fr 2fr;
 grid-template-areas:
 "banner  speech  images"
 "banner  speech  images"
-"banner  speech  images"
+"banner  action  images"
 "banner  legals  images";
 height: 100vh;
 }
@@ -86,7 +86,7 @@ min-width: 128px;
 align-items: center;
 display: flex inline;
 flex-direction: row;
-grid-area: speech;
+grid-area: action;
 justify-content: center;
 }
 
@@ -105,7 +105,8 @@ display: grid;
 grid-template-columns: 5fr 1fr;
 grid-template-areas:
 "speech  images"
-"speech  legals";
+"speech  images"
+"action  legals";
 }
 
 .punchline-banner {
@@ -147,6 +148,7 @@ margin: 0.25rem 0 0.25rem 0;
 .punchline-spoken p {
 font-family: var(--detail);
 font-size: 1.3rem;
+font-variant: normal;
 }
 
 .punchline-spoken blockquote > header:empty + p {
@@ -224,12 +226,12 @@ a {
 color: var(--punchline-colour-shadows, grey);
 font-family: var(--detail);
 font-weight: bolder;
-padding: 0.5em;
+padding-left: 0.5em;
+padding-right: 0.5em;
 }
 
 li a {
-border: 1px solid var(--punchline-colour-washout, whitesmoke);
-font-size: 1.8rem;
+border-left: 1px solid var(--punchline-colour-washout, whitesmoke);
 margin: 0.5rem 0 0.5rem 0;
 }
 

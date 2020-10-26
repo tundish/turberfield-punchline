@@ -10,7 +10,8 @@ Change Log
 =====
 
 * Back navigation uses ``site_url``.
-* Added Sphinx/ReadTheDocs documentation
+* Added Sphinx/ReadTheDocs documentation.
+* Simple fixes to the default theme.
 
 0.7.0
 =====
